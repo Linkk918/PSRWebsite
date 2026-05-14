@@ -12,28 +12,28 @@
    DESIGN TOKENS — LIGHT MODE
    ===================================================== */
 :root {
-  --navy:        #0f2044;
-  --navy-mid:    #1a3260;
-  --navy-light:  #2a4a80;
-  --cream:       #f7f3ec;
-  --cream-dark:  #ede7db;
-  --gold:        #c8963e;
-  --gold-light:  #e8b96a;
-  --gold-subtle: rgba(200,150,62,0.12);
-  --gold-glow:   rgba(200,150,62,0.35);
+  --navy:        #564a3b; /* Coco brown */
+  --navy-mid:    #6b5c49;
+  --navy-light:  #82705a;
+  --cream:       #f9f6f0;
+  --cream-dark:  #eeeadd;
+  --gold:        #288fb8; /* Cyan / Pool blue */
+  --gold-light:  #4ab0d9;
+  --gold-subtle: rgba(40,143,184,0.12);
+  --gold-glow:   rgba(40,143,184,0.35);
   --white:       #ffffff;
-  --text-primary: #0f2044;
-  --text-muted:   #6b7a99;
-  --text-on-navy: #e8dfc8;
-  --text-muted-navy: #9baacf;
+  --text-primary: #3d3429;
+  --text-muted:   #82705a;
+  --text-on-navy: #f9f6f0;
+  --text-muted-navy: #d1c6bc;
   --surface:     #ffffff;
-  --surface-alt: #f7f3ec;
-  --border:      rgba(15,32,68,0.10);
-  --border-mid:  rgba(15,32,68,0.06);
-  --shadow-sm:   0 2px 8px rgba(15,32,68,0.07);
-  --shadow-md:   0 6px 24px rgba(15,32,68,0.11);
-  --shadow-lg:   0 16px 48px rgba(15,32,68,0.14);
-  --skeleton-base: rgba(15,32,68,0.07);
+  --surface-alt: #f9f6f0;
+  --border:      rgba(86,74,59,0.10);
+  --border-mid:  rgba(86,74,59,0.06);
+  --shadow-sm:   0 2px 8px rgba(86,74,59,0.07);
+  --shadow-md:   0 6px 24px rgba(86,74,59,0.11);
+  --shadow-lg:   0 16px 48px rgba(86,74,59,0.14);
+  --skeleton-base: rgba(86,74,59,0.07);
   --skeleton-shine: rgba(255,255,255,0.6);
   --radius:      10px;
   --radius-lg:   14px;
@@ -42,29 +42,29 @@
   --stem:   #1a6b8a;
   --humss:  #7a3b8a;
   --abm:    #1a6b3a;
-  --gas:    #c8963e;
+  --gas:    #288fb8; /* Updated to Cyan */
 }
 
 /* =====================================================
    DARK MODE TOKENS
    ===================================================== */
 [data-theme="dark"] {
-  --navy:        #0b1628;
-  --navy-mid:    #0e1e38;
-  --navy-light:  #1a3260;
-  --cream:       #111d30;
-  --cream-dark:  #0d1724;
-  --gold:        #d4a44a;
-  --gold-light:  #f0c870;
-  --gold-subtle: rgba(212,164,74,0.14);
-  --gold-glow:   rgba(212,164,74,0.30);
-  --white:       #1c2d47;
-  --text-primary: #dde4f0;
-  --text-muted:   #7a90b5;
-  --text-on-navy: #d8cebc;
-  --text-muted-navy: #7a90b5;
-  --surface:     #162035;
-  --surface-alt: #111d30;
+  --navy:        #1f1b15;
+  --navy-mid:    #2e271e;
+  --navy-light:  #40372a;
+  --cream:       #16130f;
+  --cream-dark:  #1f1b15;
+  --gold:        #288fb8;
+  --gold-light:  #5bc0e7;
+  --gold-subtle: rgba(40,143,184,0.14);
+  --gold-glow:   rgba(40,143,184,0.30);
+  --white:       #2e271e;
+  --text-primary: #e6dfd5;
+  --text-muted:   #a39585;
+  --text-on-navy: #e6dfd5;
+  --text-muted-navy: #a39585;
+  --surface:     #1f1b15;
+  --surface-alt: #16130f;
   --border:      rgba(255,255,255,0.08);
   --border-mid:  rgba(255,255,255,0.04);
   --shadow-sm:   0 2px 8px rgba(0,0,0,0.30);
@@ -197,8 +197,8 @@ nav {
   background: repeating-linear-gradient(
     0deg,
     transparent, transparent 39px,
-    rgba(200,150,62,0.05) 39px,
-    rgba(200,150,62,0.05) 40px
+    rgba(40,143,184,0.05) 39px,
+    rgba(40,143,184,0.05) 40px
   );
   pointer-events: none;
 }
@@ -208,7 +208,7 @@ nav {
   bottom: -60px; left: 50%;
   transform: translateX(-50%);
   width: 600px; height: 180px;
-  background: radial-gradient(ellipse, rgba(200,150,62,0.12) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(40,143,184,0.12) 0%, transparent 70%);
   pointer-events: none;
 }
 .hero-eyebrow {
@@ -281,7 +281,7 @@ nav {
   box-shadow: 0 2px 20px rgba(0,0,0,0.25);
   transition: box-shadow var(--transition), background var(--transition);
 }
-#globalSearch::placeholder { color: #9ea8bb; }
+#globalSearch::placeholder { color: #a39585; }
 #globalSearch:focus { box-shadow: 0 0 0 3px var(--gold-glow); }
 #globalSearch:focus + .search-icon { color: var(--gold); }
 .search-clear-btn {
@@ -365,7 +365,7 @@ nav {
 }
 .featured-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 32px rgba(200,150,62,0.18);
+  box-shadow: 0 8px 32px rgba(40,143,184,0.18);
 }
 .featured-card::before {
   content: '';
@@ -388,7 +388,7 @@ nav {
   display: flex;
   align-items: center;
   gap: 3px;
-  box-shadow: 0 2px 8px rgba(200,150,62,0.4);
+  box-shadow: 0 2px 8px rgba(40,143,184,0.4);
 }
 .featured-card-body { padding: 1.25rem 1.25rem 1rem; }
 .featured-strand-bar {
@@ -416,7 +416,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(200,150,62,0.04);
+  background: rgba(40,143,184,0.04);
 }
 .featured-tags { display: flex; gap: 5px; flex-wrap: wrap; }
 .featured-card-btn {
@@ -504,7 +504,7 @@ nav {
 .stem  .strand-count { background: rgba(26,107,138,0.12); color: var(--stem);  }
 .humss .strand-count { background: rgba(122,59,138,0.12); color: var(--humss); }
 .abm   .strand-count { background: rgba(26,107,58,0.12);  color: var(--abm);   }
-.gas   .strand-count { background: rgba(200,150,62,0.14); color: var(--gas);   }
+.gas   .strand-count { background: rgba(40,143,184,0.14); color: var(--gas);   }
 
 /* =====================================================
    HOW IT WORKS
@@ -599,9 +599,9 @@ select:focus { border-color: var(--gold); }
 .card-authors { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 .tags { display: flex; flex-wrap: wrap; gap: 5px; }
 .tag { font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: 500; }
-.tag-strand { background: rgba(26,50,96,0.10); color: var(--navy-mid); }
-[data-theme="dark"] .tag-strand { background: rgba(138,170,220,0.15); color: #8aaad4; }
-.tag-year   { background: rgba(200,150,62,0.12); color: #a0720f; }
+.tag-strand { background: rgba(86,74,59,0.10); color: var(--navy-mid); }
+[data-theme="dark"] .tag-strand { background: rgba(130,112,90,0.15); color: #bfaea0; }
+.tag-year   { background: rgba(40,143,184,0.12); color: #1e6c8c; }
 [data-theme="dark"] .tag-year { color: var(--gold-light); }
 .tag-theme  { background: var(--border); color: var(--text-muted); }
 .card-body  { padding: 0.75rem 1.25rem; }
@@ -646,8 +646,8 @@ select:focus { border-color: var(--gold); }
   display: none;
   margin-top: 10px;
   padding: 10px 12px;
-  background: rgba(200,150,62,0.06);
-  border: 0.5px solid rgba(200,150,62,0.25);
+  background: rgba(40,143,184,0.06);
+  border: 0.5px solid rgba(40,143,184,0.25);
   border-radius: 8px;
   animation: slideDown 0.18s ease both;
 }
@@ -838,7 +838,7 @@ select:focus { border-color: var(--gold); }
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  background: rgba(10,18,36,0.7);
+  background: rgba(31,27,21,0.7);
   backdrop-filter: blur(6px);
   opacity: 0;
   pointer-events: none;
@@ -952,12 +952,8 @@ select:focus { border-color: var(--gold); }
 </head>
 <body>
 
-<!-- Aria live region for screen readers -->
 <div id="liveRegion" aria-live="polite" aria-atomic="true" class="sr-only"></div>
 
-<!-- ===================================================
-     NAVIGATION
-     =================================================== -->
 <nav role="navigation" aria-label="Main navigation">
   <div class="nav-brand">
     <i class="ti ti-book-2" aria-hidden="true"></i>
@@ -977,12 +973,8 @@ select:focus { border-color: var(--gold); }
   </div>
 </nav>
 
-<!-- ===================================================
-     HOME PAGE
-     =================================================== -->
 <div class="page active" id="page-home">
 
-  <!-- Hero -->
   <div class="hero">
     <div class="hero-eyebrow">Far Eastern Private School — Academic Archive</div>
     <h1 class="hero-title">Research that <em>stays</em>,<br>knowledge that <em>grows</em></h1>
@@ -1009,7 +1001,6 @@ select:focus { border-color: var(--gold); }
     <div class="wcag-badge"><i class="ti ti-shield-check" aria-hidden="true"></i> WCAG 2.2 Compliant</div>
   </div>
 
-  <!-- Editor's Picks -->
   <div class="featured-section" id="featuredSection">
     <div class="featured-header">
       <div class="featured-title">
@@ -1021,7 +1012,6 @@ select:focus { border-color: var(--gold); }
     <div class="featured-grid" id="featuredGrid"></div>
   </div>
 
-  <!-- Strand Directory -->
   <div class="section">
     <div class="section-header">
       <div class="section-title">Academic Strands</div>
@@ -1054,7 +1044,6 @@ select:focus { border-color: var(--gold); }
     </div>
   </div>
 
-  <!-- How It Works -->
   <div class="section" style="background:var(--surface);border-top:0.5px solid var(--border)">
     <div class="section-header">
       <div class="section-title">How It Works</div>
@@ -1083,12 +1072,7 @@ select:focus { border-color: var(--gold); }
     </div>
   </div>
 
-</div><!-- /page-home -->
-
-<!-- ===================================================
-     STRAND DIRECTORY PAGE
-     =================================================== -->
-<div class="page" id="page-strands">
+</div><div class="page" id="page-strands">
   <div class="section">
     <div class="section-header"><div class="section-title">Strand Directory</div></div>
     <p style="font-size:13px;color:var(--text-muted);margin-bottom:1.5rem">Select an academic strand to explore its research archive.</p>
@@ -1121,9 +1105,6 @@ select:focus { border-color: var(--gold); }
   </div>
 </div>
 
-<!-- ===================================================
-     BROWSE / STRAND DETAIL PAGE
-     =================================================== -->
 <div class="page" id="page-browse">
   <div class="strand-hero" id="browseHeader">
     <button class="back-btn" onclick="showPage('home',null)" aria-label="Go back to home">
@@ -1170,9 +1151,6 @@ select:focus { border-color: var(--gold); }
   </div>
 </div>
 
-<!-- ===================================================
-     RESOURCES PAGE
-     =================================================== -->
 <div class="page" id="page-resources">
   <div class="section">
     <div class="section-header"><div class="section-title">Resource Hub</div></div>
@@ -1218,9 +1196,6 @@ select:focus { border-color: var(--gold); }
   </div>
 </div>
 
-<!-- ===================================================
-     DOWNLOAD MODAL
-     =================================================== -->
 <div id="downloadModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
   <div class="modal-box">
     <div class="modal-icon"><i class="ti ti-file-download" aria-hidden="true"></i></div>
@@ -1236,9 +1211,6 @@ select:focus { border-color: var(--gold); }
   </div>
 </div>
 
-<!-- ===================================================
-     JAVASCRIPT
-     =================================================== -->
 <script>
 /* =====================================================
    DATA
@@ -1247,7 +1219,7 @@ const STRAND_COLORS = {
   STEM:  '#1a6b8a',
   HUMSS: '#7a3b8a',
   ABM:   '#1a6b3a',
-  GAS:   '#c8963e'
+  GAS:   '#288fb8' // Updated to Cyan
 };
 
 const FEATURED_IDS = [1, 2, 3, 5]; // IDs of editor's picks

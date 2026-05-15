@@ -1,3 +1,4 @@
+cat > /home/claude/feps_updated.html << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -156,6 +157,20 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
 .file-selected{font-size:12px;color:var(--success);margin-top:8px;font-weight:500}
 .upload-progress{height:4px;background:rgba(15,32,68,0.1);border-radius:2px;margin-top:12px;overflow:hidden;display:none}
 .upload-progress-bar{height:100%;background:var(--gold);border-radius:2px;transition:width 0.3s;width:0%}
+
+/* THEME DROPDOWN */
+#themeDropdown{display:none}
+#themeDropdown.open{display:block}
+#themeDisplay{cursor:pointer;transition:border-color 0.15s}
+#themeDisplay:hover{border-color:var(--gold)}
+#themeDisplay:focus-within{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,150,62,0.15)}
+.theme-group-label{padding:8px 10px;font-size:11px;font-weight:600;color:#6b7a99;text-transform:uppercase;letter-spacing:0.05em;border-bottom:0.5px solid rgba(15,32,68,0.08);background:rgba(15,32,68,0.02)}
+.theme-option{padding:8px 10px;cursor:pointer;font-size:13px;color:var(--navy);border-bottom:0.5px solid rgba(15,32,68,0.04);transition:background 0.1s}
+.theme-option:hover{background:rgba(15,32,68,0.05)}
+.theme-option.selected{background:rgba(200,150,62,0.1);color:var(--gold);font-weight:500}
+.theme-badge{background:rgba(200,150,62,0.15);border:0.5px solid rgba(200,150,62,0.3);color:var(--gold);padding:3px 8px;border-radius:14px;font-size:12px;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.theme-badge .remove{cursor:pointer;font-weight:600;opacity:0.6}
+.theme-badge .remove:hover{opacity:1}
 
 /* ADMIN PAPERS LIST */
 .admin-paper-card{background:var(--white);border:0.5px solid var(--card-border);border-radius:var(--radius);padding:1rem 1.25rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
@@ -349,21 +364,26 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
         <option value="">All Themes</option>
         <optgroup label="Social Sciences">
           <option>Mental Health</option><option>Society</option><option>Culture</option>
-          <option>Gender & Identity</option><option>Politics & Governance</option>
-          <option>Community Development</option><option>Media & Communication</option>
+          <option>Gender &amp; Identity</option><option>Politics &amp; Governance</option>
+          <option>Community Development</option><option>Media &amp; Communication</option>
+          <option>Psychology</option><option>Sociology</option><option>Human Rights</option>
         </optgroup>
-        <optgroup label="Economics & Business">
+        <optgroup label="Economics &amp; Business">
           <option>Economics</option><option>Business</option><option>Entrepreneurship</option>
-          <option>Marketing</option><option>Financial Literacy</option>
+          <option>Marketing</option><option>Financial Literacy</option><option>Accounting</option>
+          <option>Management</option><option>E-Commerce</option><option>Supply Chain</option>
         </optgroup>
-        <optgroup label="Science & Technology">
+        <optgroup label="Science &amp; Technology">
           <option>Technology</option><option>Environment</option><option>Health</option>
           <option>Biology</option><option>Chemistry</option><option>Physics</option>
-          <option>Engineering</option><option>Agriculture</option>
+          <option>Engineering</option><option>Agriculture</option><option>Mathematics</option>
+          <option>Computer Science</option><option>Nutrition &amp; Food Science</option>
+          <option>Climate Change</option><option>Disaster Risk</option>
         </optgroup>
-        <optgroup label="Education & Humanities">
-          <option>Education</option><option>Language & Literature</option>
-          <option>Philosophy & Ethics</option><option>History</option><option>Arts</option>
+        <optgroup label="Education &amp; Humanities">
+          <option>Education</option><option>Language &amp; Literature</option>
+          <option>Philosophy &amp; Ethics</option><option>History</option><option>Arts</option>
+          <option>Sports &amp; PE</option><option>Special Education</option><option>Values Education</option>
         </optgroup>
       </select>
       <select id="filterDesign" aria-label="Filter by research design" onchange="applyFilters()">
@@ -383,13 +403,12 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
 </div>
 
 <!-- RESOURCES -->
-<!-- RESOURCES -->
 <div class="page" id="page-resources">
   <div class="section">
     <div class="section-header"><div class="section-title">Resource Hub</div></div>
     <p style="font-size:13px;color:#6b7a99;margin-bottom:1.5rem">Curated, credible external references to support your research journey.</p>
 
-    <!-- Existing resources -->
+    <!-- General -->
     <div style="font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#9baacf;margin-bottom:10px">General</div>
     <div class="resource-grid" style="margin-bottom:2rem">
       <div class="resource-card"><div class="resource-type">Citation Guide</div><div class="resource-name">APA 7th Edition Guide</div><div class="resource-desc">The standard citation format for most academic research in Philippine Senior High.</div><a class="resource-link" href="https://apastyle.apa.org/" target="_blank"><i class="ti ti-external-link" style="font-size:13px"></i> Visit APA Style</a></div>
@@ -496,16 +515,65 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
         </div>
         <div class="form-full form-group">
           <label>Themes / Keywords * (select all that apply)</label>
-          <div class="theme-checkboxes">
-            <label class="theme-check"><input type="checkbox" value="Mental Health"> Mental Health</label>
-            <label class="theme-check"><input type="checkbox" value="Economics"> Economics</label>
-            <label class="theme-check"><input type="checkbox" value="Technology"> Technology</label>
-            <label class="theme-check"><input type="checkbox" value="Environment"> Environment</label>
-            <label class="theme-check"><input type="checkbox" value="Society"> Society</label>
-            <label class="theme-check"><input type="checkbox" value="Business"> Business</label>
-            <label class="theme-check"><input type="checkbox" value="Education"> Education</label>
-            <label class="theme-check"><input type="checkbox" value="Health"> Health</label>
-            <label class="theme-check"><input type="checkbox" value="Culture"> Culture</label>
+          <div style="position:relative" id="themeDropdownWrap">
+            <div id="themeDisplay" onclick="toggleThemeDropdown()" style="min-height:38px;padding:6px 32px 6px 10px;border:0.5px solid rgba(15,32,68,0.2);border-radius:6px;font-size:13px;color:var(--navy);background:var(--white);cursor:pointer;display:flex;flex-wrap:wrap;gap:5px;align-items:center;user-select:none;position:relative">
+              <span id="themeDisplayPlaceholder" style="color:#9ea8bb">Select themes…</span>
+            </div>
+            <i class="ti ti-chevron-down" id="themeChevron" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;color:#6b7a99;font-size:15px"></i>
+            <div id="themeDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--white);border:0.5px solid rgba(15,32,68,0.2);border-radius:8px;box-shadow:0 6px 24px rgba(15,32,68,0.12);z-index:200;max-height:300px;overflow-y:auto">
+              <div style="padding:8px 10px;border-bottom:0.5px solid rgba(15,32,68,0.08);position:sticky;top:0;background:var(--white)">
+                <input type="text" id="themeSearch" placeholder="Search themes…" onclick="event.stopPropagation()" oninput="filterThemes(this.value)" style="width:100%;padding:6px 10px;border:0.5px solid rgba(15,32,68,0.15);border-radius:5px;font-size:13px;outline:none">
+              </div>
+              <div id="themeOptionsList">
+                <div class="theme-group-label">Social Sciences</div>
+                <div class="theme-option" data-value="Mental Health">Mental Health</div>
+                <div class="theme-option" data-value="Society">Society</div>
+                <div class="theme-option" data-value="Culture">Culture</div>
+                <div class="theme-option" data-value="Gender &amp; Identity">Gender &amp; Identity</div>
+                <div class="theme-option" data-value="Politics &amp; Governance">Politics &amp; Governance</div>
+                <div class="theme-option" data-value="Community Development">Community Development</div>
+                <div class="theme-option" data-value="Media &amp; Communication">Media &amp; Communication</div>
+                <div class="theme-option" data-value="Psychology">Psychology</div>
+                <div class="theme-option" data-value="Sociology">Sociology</div>
+                <div class="theme-option" data-value="Human Rights">Human Rights</div>
+
+                <div class="theme-group-label">Economics &amp; Business</div>
+                <div class="theme-option" data-value="Economics">Economics</div>
+                <div class="theme-option" data-value="Business">Business</div>
+                <div class="theme-option" data-value="Entrepreneurship">Entrepreneurship</div>
+                <div class="theme-option" data-value="Marketing">Marketing</div>
+                <div class="theme-option" data-value="Financial Literacy">Financial Literacy</div>
+                <div class="theme-option" data-value="Accounting">Accounting</div>
+                <div class="theme-option" data-value="Management">Management</div>
+                <div class="theme-option" data-value="E-Commerce">E-Commerce</div>
+                <div class="theme-option" data-value="Supply Chain">Supply Chain</div>
+
+                <div class="theme-group-label">Science &amp; Technology</div>
+                <div class="theme-option" data-value="Technology">Technology</div>
+                <div class="theme-option" data-value="Environment">Environment</div>
+                <div class="theme-option" data-value="Health">Health</div>
+                <div class="theme-option" data-value="Biology">Biology</div>
+                <div class="theme-option" data-value="Chemistry">Chemistry</div>
+                <div class="theme-option" data-value="Physics">Physics</div>
+                <div class="theme-option" data-value="Engineering">Engineering</div>
+                <div class="theme-option" data-value="Agriculture">Agriculture</div>
+                <div class="theme-option" data-value="Mathematics">Mathematics</div>
+                <div class="theme-option" data-value="Computer Science">Computer Science</div>
+                <div class="theme-option" data-value="Nutrition &amp; Food Science">Nutrition &amp; Food Science</div>
+                <div class="theme-option" data-value="Climate Change">Climate Change</div>
+                <div class="theme-option" data-value="Disaster Risk">Disaster Risk</div>
+
+                <div class="theme-group-label">Education &amp; Humanities</div>
+                <div class="theme-option" data-value="Education">Education</div>
+                <div class="theme-option" data-value="Language &amp; Literature">Language &amp; Literature</div>
+                <div class="theme-option" data-value="Philosophy &amp; Ethics">Philosophy &amp; Ethics</div>
+                <div class="theme-option" data-value="History">History</div>
+                <div class="theme-option" data-value="Arts">Arts</div>
+                <div class="theme-option" data-value="Sports &amp; PE">Sports &amp; PE</div>
+                <div class="theme-option" data-value="Special Education">Special Education</div>
+                <div class="theme-option" data-value="Values Education">Values Education</div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="form-full form-group">
@@ -557,6 +625,7 @@ const STRAND_COLORS = {STEM:'#1a6b8a',HUMSS:'#7a3b8a',ABM:'#1a6b3a',GAS:'#c8963e
 let allPapers = [];
 let activeSearch = '';
 let isAdmin = false;
+let selectedThemes = [];
 
 // ── NAVIGATION ──
 function showPage(name, btn) {
@@ -712,6 +781,82 @@ function handleGlobalSearch(val) {
   renderCards(allPapers);
 }
 
+// ── THEME DROPDOWN ──
+function toggleThemeDropdown() {
+  const dropdown = document.getElementById('themeDropdown');
+  const display = document.getElementById('themeDisplay');
+  const chevron = document.getElementById('themeChevron');
+  const open = dropdown.style.display === 'block';
+  dropdown.style.display = open ? 'none' : 'block';
+  chevron.style.transform = open ? 'translateY(-50%)' : 'translateY(-50%) rotateZ(180deg)';
+  if (!open) document.getElementById('themeSearch').focus();
+}
+
+function filterThemes(search) {
+  const options = document.querySelectorAll('.theme-option');
+  const groups = document.querySelectorAll('.theme-group-label');
+  const val = search.toLowerCase();
+  options.forEach(opt => {
+    opt.style.display = opt.textContent.toLowerCase().includes(val) ? 'block' : 'none';
+  });
+  groups.forEach(grp => {
+    const nextOpts = [];
+    let elem = grp.nextElementSibling;
+    while (elem && !elem.classList.contains('theme-group-label')) {
+      nextOpts.push(elem);
+      elem = elem.nextElementSibling;
+    }
+    grp.style.display = nextOpts.some(o => o.style.display !== 'none') ? 'block' : 'none';
+  });
+}
+
+function selectTheme(value) {
+  const unesc = value.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
+  if (!selectedThemes.includes(unesc)) selectedThemes.push(unesc);
+  updateThemeDisplay();
+}
+
+function removeTheme(value) {
+  selectedThemes = selectedThemes.filter(t => t !== value);
+  updateThemeDisplay();
+}
+
+function updateThemeDisplay() {
+  const display = document.getElementById('themeDisplay');
+  const placeholder = document.getElementById('themeDisplayPlaceholder');
+  const options = document.querySelectorAll('.theme-option');
+  
+  display.innerHTML = '';
+  selectedThemes.forEach(t => {
+    const esc = t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    display.innerHTML += `<div class="theme-badge">${escHtml(t)}<span class="remove" onclick="removeTheme('${esc}')">&times;</span></div>`;
+  });
+  
+  if (selectedThemes.length === 0) {
+    display.appendChild(placeholder);
+  }
+  
+  options.forEach(opt => {
+    const val = opt.getAttribute('data-value').replace(/&amp;/g, '&');
+    opt.classList.toggle('selected', selectedThemes.includes(val));
+  });
+}
+
+document.addEventListener('click', (e) => {
+  if (!document.getElementById('themeDropdownWrap').contains(e.target)) {
+    document.getElementById('themeDropdown').style.display = 'none';
+    document.getElementById('themeChevron').style.transform = 'translateY(-50%)';
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.theme-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      selectTheme(opt.getAttribute('data-value'));
+    });
+  });
+});
+
 // ── PDF MODAL ──
 function openPdf(url, title) {
   document.getElementById('pdfFrame').src = url;
@@ -748,6 +893,7 @@ function checkPassword() {
 }
 function logoutAdmin() {
   isAdmin = false;
+  selectedThemes = [];
   document.getElementById('adminDashboard').style.display = 'none';
   document.getElementById('adminGate').style.display = 'flex';
   document.getElementById('adminPassword').value = '';
@@ -772,9 +918,8 @@ async function uploadPaper() {
   const year = parseInt(document.getElementById('upYear').value);
   const tips = document.getElementById('upTips').value.trim();
   const file = document.getElementById('upFile').files[0];
-  const themes = [...document.querySelectorAll('.theme-check input:checked')].map(c => c.value);
 
-  if (!title || !authors || !strand || !year || !file || !themes.length) {
+  if (!title || !authors || !strand || !year || !file || !selectedThemes.length) {
     document.getElementById('uploadMsg').innerHTML = '<span style="color:#c0392b">Please fill in all required fields and select at least one theme.</span>';
     return;
   }
@@ -804,7 +949,7 @@ async function uploadPaper() {
   const { data: urlData } = sb.storage.from(BUCKET).getPublicUrl(fileName);
   const pdfUrl = urlData.publicUrl;
 
-  const { error: dbError } = await sb.from('papers').insert([{ title, authors, strand, year, themes, tips: tips || null, pdf_url: pdfUrl }]);
+  const { error: dbError } = await sb.from('papers').insert([{ title, authors, strand, year, themes: selectedThemes, tips: tips || null, pdf_url: pdfUrl }]);
 
   document.getElementById('uploadProgressBar').style.width = '100%';
 
@@ -819,7 +964,8 @@ async function uploadPaper() {
     document.getElementById('upTips').value = '';
     document.getElementById('upFile').value = '';
     document.getElementById('fileSelectedName').style.display = 'none';
-    document.querySelectorAll('.theme-check input').forEach(c => c.checked = false);
+    selectedThemes = [];
+    updateThemeDisplay();
     showToast('Paper uploaded successfully!', 'success');
     loadAllPapers();
   }
@@ -858,3 +1004,5 @@ loadPapers();
 </script>
 </body>
 </html>
+HTMLEOF
+echo "File created successfully"

@@ -3,978 +3,226 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FEPS Research Legacy — Digital Academic Archive</title>
+<title>FEPS Research Legacy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-/* =====================================================
-   DESIGN TOKENS — LIGHT MODE
-   ===================================================== */
-:root {
-  --navy:        #564a3b; /* Coco brown */
-  --navy-mid:    #6b5c49;
-  --navy-light:  #82705a;
-  --cream:       #f9f6f0;
-  --cream-dark:  #eeeadd;
-  --gold:        #288fb8; /* Cyan / Pool blue */
-  --gold-light:  #4ab0d9;
-  --gold-subtle: rgba(40,143,184,0.12);
-  --gold-glow:   rgba(40,143,184,0.35);
-  --white:       #ffffff;
-  --text-primary: #3d3429;
-  --text-muted:   #82705a;
-  --text-on-navy: #f9f6f0;
-  --text-muted-navy: #d1c6bc;
-  --surface:     #ffffff;
-  --surface-alt: #f9f6f0;
-  --border:      rgba(86,74,59,0.10);
-  --border-mid:  rgba(86,74,59,0.06);
-  --shadow-sm:   0 2px 8px rgba(86,74,59,0.07);
-  --shadow-md:   0 6px 24px rgba(86,74,59,0.11);
-  --shadow-lg:   0 16px 48px rgba(86,74,59,0.14);
-  --skeleton-base: rgba(86,74,59,0.07);
-  --skeleton-shine: rgba(255,255,255,0.6);
-  --radius:      10px;
-  --radius-lg:   14px;
-  --transition:  0.22s cubic-bezier(0.4,0,0.2,1);
-  /* Strand accent colours */
-  --stem:   #1a6b8a;
-  --humss:  #7a3b8a;
-  --abm:    #1a6b3a;
-  --gas:    #288fb8; /* Updated to Cyan */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0f2044;--navy-mid:#1a3260;--navy-light:#2a4a80;
+  --cream:#f7f3ec;--cream-dark:#ede7db;
+  --gold:#c8963e;--gold-light:#e8b96a;
+  --text-on-navy:#e8dfc8;--text-muted-navy:#9baacf;
+  --white:#ffffff;--card-border:rgba(15,32,68,0.12);
+  --radius:10px;--success:#1a6b3a;--danger:#8a1a1a;
 }
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);min-height:100vh}
 
-/* =====================================================
-   DARK MODE TOKENS
-   ===================================================== */
-[data-theme="dark"] {
-  --navy:        #1f1b15;
-  --navy-mid:    #2e271e;
-  --navy-light:  #40372a;
-  --cream:       #16130f;
-  --cream-dark:  #1f1b15;
-  --gold:        #288fb8;
-  --gold-light:  #5bc0e7;
-  --gold-subtle: rgba(40,143,184,0.14);
-  --gold-glow:   rgba(40,143,184,0.30);
-  --white:       #2e271e;
-  --text-primary: #e6dfd5;
-  --text-muted:   #a39585;
-  --text-on-navy: #e6dfd5;
-  --text-muted-navy: #a39585;
-  --surface:     #1f1b15;
-  --surface-alt: #16130f;
-  --border:      rgba(255,255,255,0.08);
-  --border-mid:  rgba(255,255,255,0.04);
-  --shadow-sm:   0 2px 8px rgba(0,0,0,0.30);
-  --shadow-md:   0 6px 24px rgba(0,0,0,0.40);
-  --shadow-lg:   0 16px 48px rgba(0,0,0,0.50);
-  --skeleton-base: rgba(255,255,255,0.05);
-  --skeleton-shine: rgba(255,255,255,0.10);
-}
+/* NAV */
+nav{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;border-bottom:2px solid var(--gold);position:sticky;top:0;z-index:100}
+.nav-brand{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--text-on-navy);display:flex;align-items:center;gap:10px}
+.nav-brand span{color:var(--gold-light)}
+.nav-links{display:flex;gap:4px}
+.nav-btn{background:none;border:none;color:var(--text-muted-navy);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;padding:6px 12px;border-radius:6px;transition:all 0.15s}
+.nav-btn:hover,.nav-btn.active{color:var(--text-on-navy);background:rgba(255,255,255,0.08)}
+.nav-btn.active{color:var(--gold-light)}
+.admin-nav-btn{background:rgba(200,150,62,0.15);border:0.5px solid var(--gold);color:var(--gold-light);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;padding:5px 12px;border-radius:6px;display:flex;align-items:center;gap:5px;transition:all 0.15s}
+.admin-nav-btn:hover{background:rgba(200,150,62,0.25)}
 
-/* =====================================================
-   RESET & BASE
-   ===================================================== */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--cream);
-  color: var(--text-primary);
-  min-height: 100vh;
-  transition: background var(--transition), color var(--transition);
-  -webkit-font-smoothing: antialiased;
-}
+/* PAGES */
+.page{display:none}
+.page.active{display:block;animation:fadeIn 0.2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-/* =====================================================
-   FOCUS VISIBLE — WCAG 2.2
-   ===================================================== */
-:focus { outline: none; }
-:focus-visible {
-  outline: 2.5px solid var(--gold);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
+/* HERO */
+.hero{background:var(--navy);padding:3.5rem 2rem 3rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(200,150,62,0.05) 39px,rgba(200,150,62,0.05) 40px)}
+.hero-eyebrow{font-size:11px;font-weight:500;letter-spacing:0.14em;color:var(--gold);text-transform:uppercase;margin-bottom:1rem}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,38px);font-weight:700;color:var(--white);line-height:1.2;margin-bottom:1rem}
+.hero-title em{color:var(--gold-light);font-style:normal}
+.hero-sub{font-size:14px;color:var(--text-muted-navy);max-width:520px;margin:0 auto 2rem;line-height:1.6}
+.stat-row{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-bottom:2.5rem}
+.stat-num{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--gold-light)}
+.stat-lbl{font-size:11px;color:var(--text-muted-navy);margin-top:2px;letter-spacing:0.04em}
+.wcag-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.08);border:0.5px solid rgba(255,255,255,0.15);border-radius:20px;padding:4px 10px;font-size:11px;color:var(--text-muted-navy);margin-top:1rem}
 
-/* =====================================================
-   NAVIGATION
-   ===================================================== */
-nav {
-  background: var(--navy);
-  padding: 0 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 56px;
-  border-bottom: 2px solid var(--gold);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  transition: background var(--transition);
-}
-.nav-brand {
-  font-family: 'Playfair Display', serif;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text-on-navy);
-  letter-spacing: 0.02em;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  flex-shrink: 0;
-}
-.nav-brand span { color: var(--gold-light); }
-.nav-right { display: flex; align-items: center; gap: 4px; }
-.nav-links { display: flex; gap: 2px; }
-.nav-btn {
-  background: none;
-  border: none;
-  color: var(--text-muted-navy);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 400;
-  cursor: pointer;
-  padding: 6px 11px;
-  border-radius: 6px;
-  transition: all var(--transition);
-  white-space: nowrap;
-}
-.nav-btn:hover, .nav-btn.active {
-  color: var(--text-on-navy);
-  background: rgba(255,255,255,0.08);
-}
-.nav-btn.active { color: var(--gold-light); }
+/* SEARCH */
+.search-wrap{position:relative;max-width:580px;margin:0 auto}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--navy-light);font-size:18px;pointer-events:none}
+.search-input{width:100%;padding:13px 14px 13px 44px;border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:15px;background:var(--white);color:var(--navy);outline:none;box-shadow:0 2px 20px rgba(0,0,0,0.25)}
+.search-input::placeholder{color:#9ea8bb}
+.search-input:focus{box-shadow:0 0 0 3px rgba(200,150,62,0.4)}
 
-/* Dark Mode Toggle */
-.dark-toggle {
-  background: rgba(255,255,255,0.08);
-  border: 0.5px solid rgba(255,255,255,0.15);
-  border-radius: 20px;
-  padding: 5px 10px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  color: var(--text-muted-navy);
-  font-size: 12px;
-  font-family: 'DM Sans', sans-serif;
-  transition: all var(--transition);
-  margin-left: 8px;
-}
-.dark-toggle:hover { background: rgba(255,255,255,0.14); color: var(--text-on-navy); }
-.dark-toggle i { font-size: 14px; }
+/* SECTIONS */
+.section{padding:2rem}
+.section-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.5rem}
+.section-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--navy)}
+.section-count{font-size:13px;color:#6b7a99}
 
-/* =====================================================
-   PAGE SYSTEM
-   ===================================================== */
-.page { display: none; }
-.page.active {
-  display: block;
-  animation: fadeUp 0.25s ease both;
-}
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+/* STRAND GRID */
+.strand-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.strand-card{background:var(--white);border:0.5px solid var(--card-border);border-radius:var(--radius);padding:1.25rem 1rem 1rem;cursor:pointer;transition:all 0.18s;text-align:center;border-top:3px solid transparent}
+.strand-card:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(15,32,68,0.1)}
+.strand-card.stem{border-top-color:#1a6b8a}.strand-card.humss{border-top-color:#7a3b8a}
+.strand-card.abm{border-top-color:#1a6b3a}.strand-card.gas{border-top-color:#c8963e}
+.strand-icon{font-size:26px;margin-bottom:8px}
+.strand-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;margin-bottom:2px}
+.strand-full{font-size:11px;color:#6b7a99;line-height:1.3}
+.strand-count{margin-top:8px;font-size:12px;font-weight:500;padding:3px 8px;border-radius:20px;display:inline-block}
+.stem .strand-count{background:#e3f2f8;color:#1a6b8a}.humss .strand-count{background:#f2e8f5;color:#7a3b8a}
+.abm .strand-count{background:#e3f5eb;color:#1a6b3a}.gas .strand-count{background:#fdf0dc;color:#c8963e}
 
-/* =====================================================
-   HERO
-   ===================================================== */
-.hero {
-  background: var(--navy);
-  padding: 3.5rem 2rem 3rem;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  transition: background var(--transition);
-}
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent, transparent 39px,
-    rgba(40,143,184,0.05) 39px,
-    rgba(40,143,184,0.05) 40px
-  );
-  pointer-events: none;
-}
-.hero::after {
-  content: '';
-  position: absolute;
-  bottom: -60px; left: 50%;
-  transform: translateX(-50%);
-  width: 600px; height: 180px;
-  background: radial-gradient(ellipse, rgba(40,143,184,0.12) 0%, transparent 70%);
-  pointer-events: none;
-}
-.hero-eyebrow {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  color: var(--gold);
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-}
-.hero-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(26px, 4vw, 40px);
-  font-weight: 700;
-  color: #fff;
-  line-height: 1.2;
-  margin-bottom: 1rem;
-}
-.hero-title em { color: var(--gold-light); font-style: normal; }
-.hero-sub {
-  font-size: 14px;
-  color: var(--text-muted-navy);
-  max-width: 520px;
-  margin: 0 auto 2rem;
-  line-height: 1.65;
-}
-.stat-row {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin-bottom: 2.5rem;
-  flex-wrap: wrap;
-}
-.stat { text-align: center; }
-.stat-num {
-  font-family: 'Playfair Display', serif;
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--gold-light);
-}
-.stat-lbl {
-  font-size: 11px;
-  color: var(--text-muted-navy);
-  margin-top: 2px;
-  letter-spacing: 0.04em;
-}
+/* FILTERS */
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center}
+.filter-label{font-size:12px;font-weight:500;color:#6b7a99}
+select{border:0.5px solid rgba(15,32,68,0.2);border-radius:6px;padding:6px 10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--navy);background:var(--white);cursor:pointer;outline:none}
+select:focus{border-color:var(--gold)}
+.filter-clear{background:none;border:0.5px solid rgba(200,150,62,0.5);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--gold);cursor:pointer;font-family:'DM Sans',sans-serif}
+.filter-clear:hover{background:rgba(200,150,62,0.08)}
 
-/* Search Bar */
-.search-wrap { position: relative; max-width: 580px; margin: 0 auto; }
-.search-icon {
-  position: absolute;
-  left: 14px; top: 50%;
-  transform: translateY(-50%);
-  color: var(--navy-light);
-  font-size: 18px;
-  pointer-events: none;
-  transition: color var(--transition);
-  z-index: 1;
-}
-#globalSearch {
-  width: 100%;
-  padding: 13px 44px 13px 44px;
-  border: none;
-  border-radius: var(--radius);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 15px;
-  background: var(--surface);
-  color: var(--text-primary);
-  outline: none;
-  box-shadow: 0 2px 20px rgba(0,0,0,0.25);
-  transition: box-shadow var(--transition), background var(--transition);
-}
-#globalSearch::placeholder { color: #a39585; }
-#globalSearch:focus { box-shadow: 0 0 0 3px var(--gold-glow); }
-#globalSearch:focus + .search-icon { color: var(--gold); }
-.search-clear-btn {
-  position: absolute;
-  right: 12px; top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  font-size: 15px;
-  display: none;
-  padding: 4px;
-  border-radius: 50%;
-  transition: color var(--transition);
-}
-.search-clear-btn.visible { display: flex; align-items: center; }
-.search-clear-btn:hover { color: var(--gold); }
+/* CARDS */
+.cards-grid{display:grid;gap:14px}
+.research-card{background:var(--white);border:0.5px solid var(--card-border);border-radius:var(--radius);overflow:hidden;transition:box-shadow 0.18s}
+.research-card:hover{box-shadow:0 4px 20px rgba(15,32,68,0.1)}
+.card-header{padding:1rem 1.25rem 0.75rem;border-bottom:0.5px solid rgba(15,32,68,0.07)}
+.card-strand-bar{width:100%;height:3px;border-radius:2px;margin-bottom:10px}
+.card-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:var(--navy);line-height:1.3;margin-bottom:4px}
+.card-authors{font-size:12px;color:#6b7a99;margin-bottom:8px}
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.tag{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500}
+.tag-strand{background:#e8ecf5;color:#1a3260}
+.tag-year{background:#fdf0dc;color:#a0720f}
+.tag-theme{background:#f0f0f0;color:#444}
+.card-body{padding:0.75rem 1.25rem}
+.card-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn-primary{background:var(--navy);color:var(--white);border:none;border-radius:6px;padding:8px 14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background 0.15s}
+.btn-primary:hover{background:var(--navy-light)}
+.btn-secondary{background:none;border:0.5px solid var(--gold);color:var(--gold);border-radius:6px;padding:8px 12px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 0.15s}
+.btn-secondary:hover{background:rgba(200,150,62,0.08)}
+.btn-danger{background:none;border:0.5px solid #c0392b;color:#c0392b;border-radius:6px;padding:6px 10px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:5px}
+.btn-danger:hover{background:rgba(192,57,43,0.08)}
+.tips-panel{display:none;margin-top:10px;padding:10px 12px;background:#fffbf3;border:0.5px solid rgba(200,150,62,0.3);border-radius:8px}
+.tips-panel.open{display:block}
+.tips-title{font-size:11px;font-weight:500;color:var(--gold);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em}
+.tips-text{font-size:12px;color:#4a4030;line-height:1.6}
 
-.wcag-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba(255,255,255,0.08);
-  border: 0.5px solid rgba(255,255,255,0.15);
-  border-radius: 20px;
-  padding: 4px 10px;
-  font-size: 11px;
-  color: var(--text-muted-navy);
-  margin-top: 1.25rem;
-}
-.wcag-badge i { color: var(--gold); font-size: 13px; }
+/* PDF MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,18,40,0.75);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+.modal-overlay.open{display:flex}
+.pdf-modal{background:var(--white);border-radius:var(--radius);width:95vw;max-width:900px;height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+.pdf-modal-header{background:var(--navy);padding:0.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--gold);flex-shrink:0}
+.pdf-modal-title{font-family:'Playfair Display',serif;font-size:14px;color:var(--text-on-navy);font-weight:600;flex:1;margin-right:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pdf-modal-actions{display:flex;gap:8px;align-items:center}
+.pdf-modal-btn{background:rgba(255,255,255,0.1);border:0.5px solid rgba(255,255,255,0.2);color:var(--text-on-navy);border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:5px;text-decoration:none;transition:background 0.15s}
+.pdf-modal-btn:hover{background:rgba(255,255,255,0.18)}
+.pdf-close{background:none;border:none;color:var(--text-muted-navy);cursor:pointer;font-size:20px;display:flex;align-items:center;padding:4px;border-radius:4px;transition:color 0.15s}
+.pdf-close:hover{color:var(--white)}
+.pdf-frame{flex:1;border:none;width:100%;background:#525659}
 
-/* =====================================================
-   FEATURED / EDITOR'S PICKS
-   ===================================================== */
-.featured-section {
-  padding: 2.5rem 2rem;
-  background: var(--surface-alt);
-  border-bottom: 0.5px solid var(--border);
-}
-.featured-header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.featured-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.featured-title-icon {
-  color: var(--gold);
-  font-size: 18px;
-}
-.featured-subtitle {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-style: italic;
-}
-.featured-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
-}
-.featured-card {
-  background: var(--surface);
-  border: 1.5px solid var(--gold);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  position: relative;
-  transition: transform var(--transition), box-shadow var(--transition);
-  cursor: default;
-}
-.featured-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 32px rgba(40,143,184,0.18);
-}
-.featured-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
-}
-.featured-badge {
-  position: absolute;
-  top: 14px; right: 14px;
-  background: linear-gradient(135deg, var(--gold), var(--gold-light));
-  color: #fff;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  box-shadow: 0 2px 8px rgba(40,143,184,0.4);
-}
-.featured-card-body { padding: 1.25rem 1.25rem 1rem; }
-.featured-strand-bar {
-  width: 28px; height: 3px;
-  border-radius: 2px;
-  margin-bottom: 10px;
-}
-.featured-card-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
-  line-height: 1.35;
-  margin-bottom: 6px;
-  padding-right: 70px;
-}
-.featured-card-authors {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-bottom: 10px;
-}
-.featured-card-footer {
-  padding: 0.75rem 1.25rem;
-  border-top: 0.5px solid var(--border-mid);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(40,143,184,0.04);
-}
-.featured-tags { display: flex; gap: 5px; flex-wrap: wrap; }
-.featured-card-btn {
-  background: var(--gold);
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  transition: background var(--transition), transform var(--transition);
-  white-space: nowrap;
-}
-.featured-card-btn:hover {
-  background: var(--gold-light);
-  transform: scale(1.03);
-}
+/* ADMIN PANEL */
+.admin-gate{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 56px);padding:2rem}
+.gate-card{background:var(--white);border:0.5px solid var(--card-border);border-radius:var(--radius);padding:2.5rem;max-width:380px;width:100%;text-align:center}
+.gate-icon{font-size:36px;color:var(--gold);margin-bottom:1rem}
+.gate-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;margin-bottom:0.5rem}
+.gate-sub{font-size:13px;color:#6b7a99;margin-bottom:1.5rem;line-height:1.5}
+.form-group{text-align:left;margin-bottom:1rem}
+label{font-size:12px;font-weight:500;color:#6b7a99;display:block;margin-bottom:5px}
+input[type=text],input[type=password],input[type=number],textarea{width:100%;padding:9px 12px;border:0.5px solid rgba(15,32,68,0.2);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--navy);background:var(--white);outline:none;transition:border-color 0.15s}
+input:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,150,62,0.15)}
+textarea{resize:vertical;min-height:80px;line-height:1.5}
+.btn-full{width:100%;padding:11px;background:var(--navy);color:var(--white);border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:background 0.15s}
+.btn-full:hover{background:var(--navy-light)}
+.btn-full:disabled{opacity:0.6;cursor:not-allowed}
+.error-msg{font-size:12px;color:#c0392b;margin-top:8px}
+.success-msg{font-size:12px;color:var(--success);margin-top:8px}
 
-/* =====================================================
-   SECTIONS
-   ===================================================== */
-.section { padding: 2.5rem 2rem; }
-.section-header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.section-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-.section-count {
-  font-size: 13px;
-  color: var(--text-muted);
-}
+/* UPLOAD FORM */
+.upload-section{padding:2rem;max-width:700px}
+.upload-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:0.5rem}
+.upload-sub{font-size:13px;color:#6b7a99;margin-bottom:2rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-full{grid-column:1/-1}
+.theme-checkboxes{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.theme-check{display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer}
+.theme-check input{cursor:pointer;accent-color:var(--gold)}
+.file-drop{border:2px dashed rgba(15,32,68,0.2);border-radius:var(--radius);padding:2rem;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--cream);position:relative}
+.file-drop:hover,.file-drop.drag-over{border-color:var(--gold);background:#fffbf3}
+.file-drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.file-drop-icon{font-size:28px;color:var(--gold);margin-bottom:8px}
+.file-drop-text{font-size:13px;color:#6b7a99}
+.file-drop-text strong{color:var(--navy)}
+.file-selected{font-size:12px;color:var(--success);margin-top:8px;font-weight:500}
+.upload-progress{height:4px;background:rgba(15,32,68,0.1);border-radius:2px;margin-top:12px;overflow:hidden;display:none}
+.upload-progress-bar{height:100%;background:var(--gold);border-radius:2px;transition:width 0.3s;width:0%}
 
-/* =====================================================
-   STRAND GRID
-   ===================================================== */
-.strand-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-}
-.strand-card {
-  background: var(--surface);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.25rem 1rem 1rem;
-  cursor: pointer;
-  transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
-  text-align: center;
-  border-top: 3px solid transparent;
-  position: relative;
-}
-.strand-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
-}
-.strand-card.stem  { border-top-color: var(--stem);  }
-.strand-card.humss { border-top-color: var(--humss); }
-.strand-card.abm   { border-top-color: var(--abm);   }
-.strand-card.gas   { border-top-color: var(--gas);   }
-.strand-icon  { font-size: 26px; margin-bottom: 8px; }
-.strand-name  { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 600; margin-bottom: 2px; color: var(--text-primary); }
-.strand-full  { font-size: 11px; color: var(--text-muted); line-height: 1.3; }
-.strand-count {
-  margin-top: 8px;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 3px 8px;
-  border-radius: 20px;
-  display: inline-block;
-}
-.stem  .strand-count { background: rgba(26,107,138,0.12); color: var(--stem);  }
-.humss .strand-count { background: rgba(122,59,138,0.12); color: var(--humss); }
-.abm   .strand-count { background: rgba(26,107,58,0.12);  color: var(--abm);   }
-.gas   .strand-count { background: rgba(40,143,184,0.14); color: var(--gas);   }
+/* ADMIN PAPERS LIST */
+.admin-paper-card{background:var(--white);border:0.5px solid var(--card-border);border-radius:var(--radius);padding:1rem 1.25rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
+.admin-paper-info{flex:1}
+.admin-paper-title{font-weight:500;font-size:14px;margin-bottom:3px}
+.admin-paper-meta{font-size:12px;color:#6b7a99}
+.admin-actions{display:flex;gap:6px;flex-shrink:0}
 
-/* =====================================================
-   HOW IT WORKS
-   ===================================================== */
-.how-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 12px;
-}
-.how-card {
-  padding: 1rem;
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--surface-alt);
-  transition: background var(--transition);
-}
-.how-card i { font-size: 20px; color: var(--gold); margin-bottom: 8px; display: block; }
-.how-card-title { font-weight: 500; font-size: 13px; margin-bottom: 4px; color: var(--text-primary); }
-.how-card-desc  { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+/* RESOURCE HUB */
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.resource-card{background:var(--white);border:0.5px solid var(--card-border);border-radius:var(--radius);padding:1rem 1.25rem}
+.resource-type{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;color:var(--gold);margin-bottom:6px}
+.resource-name{font-family:'Playfair Display',serif;font-size:14px;font-weight:600;margin-bottom:4px;color:var(--navy)}
+.resource-desc{font-size:12px;color:#6b7a99;line-height:1.5;margin-bottom:8px}
+.resource-link{font-size:12px;color:var(--navy-light);font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0;text-decoration:none}
+.resource-link:hover{color:var(--navy)}
 
-/* =====================================================
-   FILTERS
-   ===================================================== */
-.filter-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 1.5rem;
-  align-items: center;
-}
-.filter-label { font-size: 12px; font-weight: 500; color: var(--text-muted); margin-right: 2px; }
-select {
-  border: 0.5px solid var(--border);
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  color: var(--text-primary);
-  background: var(--surface);
-  cursor: pointer;
-  outline: none;
-  transition: border-color var(--transition), background var(--transition);
-}
-select:focus { border-color: var(--gold); }
-.filter-clear {
-  background: none;
-  border: 0.5px solid var(--gold-glow);
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 12px;
-  color: var(--gold);
-  cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
-  transition: background var(--transition), border-color var(--transition);
-}
-.filter-clear:hover { background: var(--gold-subtle); border-color: var(--gold); }
+/* STRAND PAGE */
+.strand-hero{padding:2rem;border-bottom:0.5px solid var(--card-border)}
+.back-btn{background:none;border:none;color:var(--navy-light);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px;margin-bottom:1rem;padding:0}
+.back-btn:hover{color:var(--navy)}
 
-/* =====================================================
-   RESEARCH CARDS
-   ===================================================== */
-.cards-grid { display: grid; gap: 14px; }
-
-.research-card {
-  background: var(--surface);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  transition: box-shadow var(--transition), transform var(--transition), background var(--transition);
-  animation: cardIn 0.3s ease both;
-}
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.research-card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-.card-header {
-  padding: 1rem 1.25rem 0.75rem;
-  border-bottom: 0.5px solid var(--border-mid);
-}
-.card-strand-bar { width: 100%; height: 3px; border-radius: 2px; margin-bottom: 10px; }
-.card-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-  line-height: 1.3;
-  margin-bottom: 4px;
-}
-.card-authors { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
-.tags { display: flex; flex-wrap: wrap; gap: 5px; }
-.tag { font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: 500; }
-.tag-strand { background: rgba(86,74,59,0.10); color: var(--navy-mid); }
-[data-theme="dark"] .tag-strand { background: rgba(130,112,90,0.15); color: #bfaea0; }
-.tag-year   { background: rgba(40,143,184,0.12); color: #1e6c8c; }
-[data-theme="dark"] .tag-year { color: var(--gold-light); }
-.tag-theme  { background: var(--border); color: var(--text-muted); }
-.card-body  { padding: 0.75rem 1.25rem; }
-.card-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-
-.btn-download {
-  background: var(--navy-mid);
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 14px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: background var(--transition), transform var(--transition);
-}
-.btn-download:hover {
-  background: var(--navy-light);
-  transform: scale(1.02);
-}
-.btn-tips {
-  background: none;
-  border: 0.5px solid var(--gold);
-  color: var(--gold);
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  transition: background var(--transition), transform var(--transition);
-}
-.btn-tips:hover { background: var(--gold-subtle); transform: scale(1.02); }
-
-.tips-panel {
-  display: none;
-  margin-top: 10px;
-  padding: 10px 12px;
-  background: rgba(40,143,184,0.06);
-  border: 0.5px solid rgba(40,143,184,0.25);
-  border-radius: 8px;
-  animation: slideDown 0.18s ease both;
-}
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-4px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.tips-panel.open { display: block; }
-.tips-title {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--gold);
-  margin-bottom: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-.tips-text { font-size: 12px; color: var(--text-primary); line-height: 1.65; }
-
-/* =====================================================
-   SKELETON LOADING
-   ===================================================== */
-.skeleton-grid { display: grid; gap: 14px; }
-.skeleton-card {
-  background: var(--surface);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1rem 1.25rem;
-  overflow: hidden;
-}
-.skel {
-  background: var(--skeleton-base);
-  border-radius: 4px;
-  position: relative;
-  overflow: hidden;
-}
-.skel::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--skeleton-shine) 50%,
-    transparent 100%
-  );
-  animation: shimmer 1.4s infinite;
-}
-@keyframes shimmer {
-  from { transform: translateX(-100%); }
-  to   { transform: translateX(100%); }
-}
-.skel-bar  { height: 3px; width: 100%; margin-bottom: 12px; }
-.skel-h1   { height: 16px; width: 80%; margin-bottom: 8px; }
-.skel-h2   { height: 16px; width: 60%; margin-bottom: 8px; }
-.skel-txt  { height: 12px; width: 40%; margin-bottom: 12px; }
-.skel-row  { display: flex; gap: 6px; }
-.skel-pill { height: 22px; width: 55px; border-radius: 20px; }
-
-/* =====================================================
-   PAGINATION
-   ===================================================== */
-.pagination-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 1.5rem 0 0.5rem;
-  flex-wrap: wrap;
-}
-.pag-btn {
-  background: var(--surface);
-  border: 0.5px solid var(--border);
-  border-radius: 6px;
-  padding: 7px 12px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: all var(--transition);
-  min-width: 36px;
-  text-align: center;
-}
-.pag-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold); }
-.pag-btn.active { background: var(--navy-mid); color: #fff; border-color: var(--navy-mid); font-weight: 600; }
-.pag-btn:disabled { opacity: 0.38; cursor: not-allowed; }
-.pag-ellipsis { font-size: 13px; color: var(--text-muted); padding: 0 4px; }
-
-/* =====================================================
-   STRAND PAGE HEADER
-   ===================================================== */
-.strand-hero {
-  padding: 2rem;
-  border-bottom: 0.5px solid var(--border);
-  background: var(--surface-alt);
-  transition: background var(--transition);
-}
-.back-btn {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 1rem;
-  padding: 0;
-  transition: color var(--transition);
-}
-.back-btn:hover { color: var(--text-primary); }
-.strand-hero-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-.strand-hero-sub { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
-
-/* =====================================================
-   RESOURCE HUB
-   ===================================================== */
-.resource-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-}
-.resource-card {
-  background: var(--surface);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1rem 1.25rem;
-  transition: box-shadow var(--transition), transform var(--transition);
-}
-.resource-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-.resource-type {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 500;
-  color: var(--gold);
-  margin-bottom: 6px;
-}
-.resource-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 4px;
-  color: var(--text-primary);
-}
-.resource-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 8px; }
-.resource-link {
-  font-size: 12px;
-  color: var(--navy-light);
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: none;
-  border: none;
-  font-family: 'DM Sans', sans-serif;
-  padding: 0;
-  transition: color var(--transition);
-}
-[data-theme="dark"] .resource-link { color: var(--gold-light); }
-.resource-link:hover { color: var(--gold); }
-
-/* =====================================================
-   EMPTY STATE
-   ===================================================== */
-.empty {
-  text-align: center;
-  padding: 3rem 1rem;
-  color: var(--text-muted);
-}
-.empty i { font-size: 32px; margin-bottom: 8px; display: block; }
-.empty p  { font-size: 14px; }
-
-/* =====================================================
-   DOWNLOAD MODAL
-   ===================================================== */
-#downloadModal {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  background: rgba(31,27,21,0.7);
-  backdrop-filter: blur(6px);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-}
-#downloadModal.open {
-  opacity: 1;
-  pointer-events: all;
-}
-.modal-box {
-  background: var(--surface);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 2rem;
-  max-width: 420px;
-  width: 100%;
-  box-shadow: var(--shadow-lg);
-  transform: scale(0.94);
-  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
-}
-#downloadModal.open .modal-box { transform: scale(1); }
-.modal-icon {
-  width: 48px; height: 48px;
-  background: var(--gold-subtle);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.25rem;
-}
-.modal-icon i { font-size: 24px; color: var(--gold); }
-.modal-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-primary);
-  text-align: center;
-  margin-bottom: 6px;
-}
-.modal-paper-name {
-  font-size: 12px;
-  color: var(--text-muted);
-  text-align: center;
-  margin-bottom: 1.5rem;
-  line-height: 1.5;
-  font-style: italic;
-}
-.progress-track {
-  background: var(--border);
-  border-radius: 20px;
-  height: 6px;
-  overflow: hidden;
-  margin-bottom: 8px;
-}
-.progress-bar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, var(--gold), var(--gold-light));
-  border-radius: 20px;
-  transition: width 0.12s ease;
-}
-.progress-label {
-  font-size: 12px;
-  color: var(--text-muted);
-  text-align: center;
-  margin-bottom: 1.25rem;
-  min-height: 18px;
-}
-.modal-close {
-  width: 100%;
-  background: none;
-  border: 0.5px solid var(--border);
-  border-radius: 6px;
-  padding: 9px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all var(--transition);
-  display: none;
-}
-.modal-close.visible { display: block; }
-.modal-close:hover { border-color: var(--gold); color: var(--gold); }
-
-/* =====================================================
-   ARIA LIVE REGION
-   ===================================================== */
-.sr-only {
-  position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden;
-  clip: rect(0,0,0,0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* =====================================================
-   RESPONSIVE
-   ===================================================== */
-@media (max-width: 640px) {
-  nav { padding: 0 1rem; }
-  .nav-btn { padding: 5px 8px; font-size: 12px; }
-  .hero { padding: 2.5rem 1.25rem 2.5rem; }
-  .section { padding: 2rem 1.25rem; }
-  .featured-section { padding: 2rem 1.25rem; }
-  .strand-hero { padding: 1.5rem 1.25rem; }
-  .dark-toggle span { display: none; }
-}
+/* MISC */
+.no-results{text-align:center;padding:3rem 1rem;color:#9baacf}
+.no-results i{font-size:32px;margin-bottom:8px;display:block}
+.loading{text-align:center;padding:3rem;color:#9baacf;font-size:14px}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--navy);color:var(--white);padding:10px 16px;border-radius:8px;font-size:13px;z-index:2000;display:none;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,0.3);max-width:320px}
+.toast.show{display:flex}
+.toast.success{border-left:3px solid #4caf50}
+.toast.error{border-left:3px solid #c0392b}
+.divider{border:none;border-top:0.5px solid var(--card-border);margin:1.5rem 0}
+.badge-logout{background:none;border:0.5px solid rgba(200,150,62,0.4);color:var(--gold);font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;padding:4px 8px;border-radius:5px;transition:all 0.15s}
+.badge-logout:hover{background:rgba(200,150,62,0.1)}
 </style>
 </head>
 <body>
 
-<div id="liveRegion" aria-live="polite" aria-atomic="true" class="sr-only"></div>
-
-<nav role="navigation" aria-label="Main navigation">
-  <div class="nav-brand">
-    <i class="ti ti-book-2" aria-hidden="true"></i>
-    FEPS <span>Research Legacy</span>
-  </div>
-  <div class="nav-right">
-    <div class="nav-links" role="menubar">
-      <button class="nav-btn active" role="menuitem" onclick="showPage('home',this)">Home</button>
-      <button class="nav-btn" role="menuitem" onclick="showPage('strands',this)">Strands</button>
-      <button class="nav-btn" role="menuitem" onclick="showPage('browse',this)">Browse</button>
-      <button class="nav-btn" role="menuitem" onclick="showPage('resources',this)">Resources</button>
-    </div>
-    <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" aria-label="Toggle dark mode" aria-pressed="false">
-      <i class="ti ti-moon" id="darkIcon" aria-hidden="true"></i>
-      <span id="darkLabel">Dark</span>
-    </button>
+<nav>
+  <div class="nav-brand"><i class="ti ti-book-2"></i> FEPS <span>Research Legacy</span></div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showPage('home',this)">Home</button>
+    <button class="nav-btn" onclick="showPage('strands',this)">Strands</button>
+    <button class="nav-btn" onclick="showPage('browse',this)">Browse</button>
+    <button class="nav-btn" onclick="showPage('resources',this)">Resources</button>
+    <button class="admin-nav-btn" onclick="showAdminPage()" id="adminNavBtn"><i class="ti ti-lock" style="font-size:13px"></i> Admin</button>
   </div>
 </nav>
 
-<div class="page active" id="page-home">
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
+<!-- PDF MODAL -->
+<div class="modal-overlay" id="pdfModal" onclick="closePdfModal(event)">
+  <div class="pdf-modal">
+    <div class="pdf-modal-header">
+      <div class="pdf-modal-title" id="pdfModalTitle">Research Paper</div>
+      <div class="pdf-modal-actions">
+        <a class="pdf-modal-btn" id="pdfDownloadBtn" href="#" download target="_blank"><i class="ti ti-download" style="font-size:14px"></i> Download</a>
+        <button class="pdf-close" onclick="closePdfModal(null)" aria-label="Close PDF viewer"><i class="ti ti-x"></i></button>
+      </div>
+    </div>
+    <iframe class="pdf-frame" id="pdfFrame" title="PDF Viewer"></iframe>
+  </div>
+</div>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
   <div class="hero">
     <div class="hero-eyebrow">Far Eastern Private School — Academic Archive</div>
     <h1 class="hero-title">Research that <em>stays</em>,<br>knowledge that <em>grows</em></h1>
@@ -985,693 +233,563 @@ select:focus { border-color: var(--gold); }
       <div class="stat"><div class="stat-num">94%</div><div class="stat-lbl">Prefer this platform</div></div>
     </div>
     <div class="search-wrap">
-      <i class="ti ti-search search-icon" aria-hidden="true"></i>
-      <input
-        type="text"
-        id="globalSearch"
-        placeholder="Search by title, keyword, author, or strand…"
-        aria-label="Search research papers"
-        autocomplete="off"
-        oninput="handleGlobalSearch(this.value)"
-      >
-      <button class="search-clear-btn" id="searchClearBtn" aria-label="Clear search" onclick="clearGlobalSearch()">
-        <i class="ti ti-x" aria-hidden="true"></i>
-      </button>
+      <i class="ti ti-search search-icon"></i>
+      <input type="text" class="search-input" id="globalSearch" placeholder="Search by title, keyword, author, or strand…" aria-label="Search research papers" oninput="handleGlobalSearch(this.value)">
     </div>
-    <div class="wcag-badge"><i class="ti ti-shield-check" aria-hidden="true"></i> WCAG 2.2 Compliant</div>
+    <div class="wcag-badge"><i class="ti ti-shield-check" style="color:var(--gold);font-size:13px"></i> WCAG 2.2 Compliant</div>
   </div>
-
-  <div class="featured-section" id="featuredSection">
-    <div class="featured-header">
-      <div class="featured-title">
-        <i class="ti ti-award featured-title-icon" aria-hidden="true"></i>
-        Editor's Picks
-      </div>
-      <div class="featured-subtitle">Curated top-tier research by the archive committee</div>
-    </div>
-    <div class="featured-grid" id="featuredGrid"></div>
-  </div>
-
   <div class="section">
-    <div class="section-header">
-      <div class="section-title">Academic Strands</div>
-    </div>
+    <div class="section-header"><div class="section-title">Academic Strands</div></div>
     <div class="strand-grid">
-      <div class="strand-card stem" onclick="showStrandPage('STEM')" role="button" tabindex="0" aria-label="Browse STEM papers">
-        <div class="strand-icon" aria-hidden="true">🔬</div>
-        <div class="strand-name">STEM</div>
+      <div class="strand-card stem" onclick="showStrandPage('STEM')" role="button" tabindex="0">
+        <div class="strand-icon">🔬</div><div class="strand-name">STEM</div>
         <div class="strand-full">Science, Technology, Engineering & Mathematics</div>
-        <div class="strand-count" id="cnt-stem">— papers</div>
+        <div class="strand-count" id="cnt-STEM">— papers</div>
       </div>
-      <div class="strand-card humss" onclick="showStrandPage('HUMSS')" role="button" tabindex="0" aria-label="Browse HUMSS papers">
-        <div class="strand-icon" aria-hidden="true">📖</div>
-        <div class="strand-name">HUMSS</div>
+      <div class="strand-card humss" onclick="showStrandPage('HUMSS')" role="button" tabindex="0">
+        <div class="strand-icon">📖</div><div class="strand-name">HUMSS</div>
         <div class="strand-full">Humanities & Social Sciences</div>
-        <div class="strand-count" id="cnt-humss">— papers</div>
+        <div class="strand-count" id="cnt-HUMSS">— papers</div>
       </div>
-      <div class="strand-card abm" onclick="showStrandPage('ABM')" role="button" tabindex="0" aria-label="Browse ABM papers">
-        <div class="strand-icon" aria-hidden="true">📊</div>
-        <div class="strand-name">ABM</div>
+      <div class="strand-card abm" onclick="showStrandPage('ABM')" role="button" tabindex="0">
+        <div class="strand-icon">📊</div><div class="strand-name">ABM</div>
         <div class="strand-full">Accountancy, Business & Management</div>
-        <div class="strand-count" id="cnt-abm">— papers</div>
+        <div class="strand-count" id="cnt-ABM">— papers</div>
       </div>
-      <div class="strand-card gas" onclick="showStrandPage('GAS')" role="button" tabindex="0" aria-label="Browse GAS papers">
-        <div class="strand-icon" aria-hidden="true">🌐</div>
-        <div class="strand-name">GAS</div>
+      <div class="strand-card gas" onclick="showStrandPage('GAS')" role="button" tabindex="0">
+        <div class="strand-icon">🌐</div><div class="strand-name">GAS</div>
         <div class="strand-full">General Academic Strand</div>
-        <div class="strand-count" id="cnt-gas">— papers</div>
+        <div class="strand-count" id="cnt-GAS">— papers</div>
       </div>
     </div>
   </div>
-
-  <div class="section" style="background:var(--surface);border-top:0.5px solid var(--border)">
-    <div class="section-header">
-      <div class="section-title">How It Works</div>
-    </div>
-    <div class="how-grid">
-      <div class="how-card">
-        <i class="ti ti-search" aria-hidden="true"></i>
-        <div class="how-card-title">Search & Filter</div>
-        <div class="how-card-desc">Filter by strand, year, and keywords to find relevant papers instantly.</div>
+  <div class="section" style="background:var(--white);border-top:0.5px solid var(--card-border)">
+    <div class="section-header"><div class="section-title">How It Works</div></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px">
+      <div style="padding:1rem;border:0.5px solid var(--card-border);border-radius:var(--radius);background:var(--cream)">
+        <i class="ti ti-search" style="font-size:20px;color:var(--gold);margin-bottom:8px;display:block"></i>
+        <div style="font-weight:500;font-size:13px;margin-bottom:4px">Search & Filter</div>
+        <div style="font-size:12px;color:#6b7a99;line-height:1.5">Filter by strand, year, and keywords to find relevant papers instantly.</div>
       </div>
-      <div class="how-card">
-        <i class="ti ti-file-download" aria-hidden="true"></i>
-        <div class="how-card-title">Download PDF</div>
-        <div class="how-card-desc">Access full research documents with direct, no-login PDF downloads.</div>
+      <div style="padding:1rem;border:0.5px solid var(--card-border);border-radius:var(--radius);background:var(--cream)">
+        <i class="ti ti-eye" style="font-size:20px;color:var(--gold);margin-bottom:8px;display:block"></i>
+        <div style="font-weight:500;font-size:13px;margin-bottom:4px">View In-Browser</div>
+        <div style="font-size:12px;color:#6b7a99;line-height:1.5">Read full PDF documents directly on this page — no download required.</div>
       </div>
-      <div class="how-card">
-        <i class="ti ti-bulb" aria-hidden="true"></i>
-        <div class="how-card-title">Author Tips</div>
-        <div class="how-card-desc">Read insider advice on methodology pitfalls from the researchers themselves.</div>
+      <div style="padding:1rem;border:0.5px solid var(--card-border);border-radius:var(--radius);background:var(--cream)">
+        <i class="ti ti-bulb" style="font-size:20px;color:var(--gold);margin-bottom:8px;display:block"></i>
+        <div style="font-weight:500;font-size:13px;margin-bottom:4px">Author Tips</div>
+        <div style="font-size:12px;color:#6b7a99;line-height:1.5">Read insider advice on methodology pitfalls from the researchers themselves.</div>
       </div>
-      <div class="how-card">
-        <i class="ti ti-library" aria-hidden="true"></i>
-        <div class="how-card-title">Resource Hub</div>
-        <div class="how-card-desc">Curated external references to strengthen your own research foundation.</div>
+      <div style="padding:1rem;border:0.5px solid var(--card-border);border-radius:var(--radius);background:var(--cream)">
+        <i class="ti ti-library" style="font-size:20px;color:var(--gold);margin-bottom:8px;display:block"></i>
+        <div style="font-weight:500;font-size:13px;margin-bottom:4px">Resource Hub</div>
+        <div style="font-size:12px;color:#6b7a99;line-height:1.5">Curated external references to strengthen your own research foundation.</div>
       </div>
     </div>
   </div>
+</div>
 
-</div><div class="page" id="page-strands">
+<!-- STRANDS DIRECTORY -->
+<div class="page" id="page-strands">
   <div class="section">
     <div class="section-header"><div class="section-title">Strand Directory</div></div>
-    <p style="font-size:13px;color:var(--text-muted);margin-bottom:1.5rem">Select an academic strand to explore its research archive.</p>
+    <p style="font-size:13px;color:#6b7a99;margin-bottom:1.5rem">Select an academic strand to explore its research archive.</p>
     <div class="strand-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
       <div class="strand-card stem" onclick="showStrandPage('STEM')" role="button" tabindex="0" style="padding:1.5rem 1.25rem;text-align:left">
         <div style="font-size:32px;margin-bottom:12px">🔬</div>
         <div class="strand-name" style="font-size:17px">STEM</div>
         <div class="strand-full" style="margin-bottom:10px">Science, Technology, Engineering & Mathematics</div>
-        <div class="strand-count" id="cnt2-stem">— papers</div>
+        <div class="strand-count" id="cnt2-STEM">— papers</div>
       </div>
       <div class="strand-card humss" onclick="showStrandPage('HUMSS')" role="button" tabindex="0" style="padding:1.5rem 1.25rem;text-align:left">
         <div style="font-size:32px;margin-bottom:12px">📖</div>
         <div class="strand-name" style="font-size:17px">HUMSS</div>
         <div class="strand-full" style="margin-bottom:10px">Humanities & Social Sciences</div>
-        <div class="strand-count" id="cnt2-humss">— papers</div>
+        <div class="strand-count" id="cnt2-HUMSS">— papers</div>
       </div>
       <div class="strand-card abm" onclick="showStrandPage('ABM')" role="button" tabindex="0" style="padding:1.5rem 1.25rem;text-align:left">
         <div style="font-size:32px;margin-bottom:12px">📊</div>
         <div class="strand-name" style="font-size:17px">ABM</div>
         <div class="strand-full" style="margin-bottom:10px">Accountancy, Business & Management</div>
-        <div class="strand-count" id="cnt2-abm">— papers</div>
+        <div class="strand-count" id="cnt2-ABM">— papers</div>
       </div>
       <div class="strand-card gas" onclick="showStrandPage('GAS')" role="button" tabindex="0" style="padding:1.5rem 1.25rem;text-align:left">
         <div style="font-size:32px;margin-bottom:12px">🌐</div>
         <div class="strand-name" style="font-size:17px">GAS</div>
         <div class="strand-full" style="margin-bottom:10px">General Academic Strand</div>
-        <div class="strand-count" id="cnt2-gas">— papers</div>
+        <div class="strand-count" id="cnt2-GAS">— papers</div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- BROWSE -->
 <div class="page" id="page-browse">
   <div class="strand-hero" id="browseHeader">
-    <button class="back-btn" onclick="showPage('home',null)" aria-label="Go back to home">
-      <i class="ti ti-arrow-left" aria-hidden="true"></i> Back
+    <button class="back-btn" onclick="showPage('home',document.querySelector('.nav-btn'))">
+      <i class="ti ti-arrow-left"></i> Back
     </button>
-    <div id="browseStrandTitle" class="strand-hero-title">All Research</div>
-    <div id="browseStrandSub" class="strand-hero-sub">Browse all submitted research papers.</div>
+    <div id="browseStrandTitle" style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700">All Research</div>
+    <div id="browseStrandSub" style="font-size:13px;color:#6b7a99;margin-top:4px">Browse all submitted research papers.</div>
   </div>
   <div class="section">
-    <div class="filter-row" role="group" aria-label="Filter options">
-      <span class="filter-label" id="filterLabel">Filter:</span>
-      <select id="filterStrand" aria-label="Filter by strand" aria-labelledby="filterLabel" onchange="applyFilters()">
+    <div class="filter-row">
+      <span class="filter-label">Filter:</span>
+      <select id="filterStrand" aria-label="Filter by strand" onchange="applyFilters()">
         <option value="">All Strands</option>
-        <option value="STEM">STEM</option>
-        <option value="HUMSS">HUMSS</option>
-        <option value="ABM">ABM</option>
-        <option value="GAS">GAS</option>
+        <option value="STEM">STEM</option><option value="HUMSS">HUMSS</option>
+        <option value="ABM">ABM</option><option value="GAS">GAS</option>
       </select>
       <select id="filterYear" aria-label="Filter by year" onchange="applyFilters()">
         <option value="">All Years</option>
-        <option value="2026">2026</option>
-        <option value="2025">2025</option>
-        <option value="2024">2024</option>
+        <option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option>
       </select>
       <select id="filterTheme" aria-label="Filter by theme" onchange="applyFilters()">
         <option value="">All Themes</option>
-        <option value="Mental Health">Mental Health</option>
-        <option value="Economics">Economics</option>
-        <option value="Technology">Technology</option>
-        <option value="Environment">Environment</option>
-        <option value="Society">Society</option>
-        <option value="Business">Business</option>
+        <option>Mental Health</option><option>Economics</option><option>Technology</option>
+        <option>Environment</option><option>Society</option><option>Business</option>
+        <option>Education</option><option>Health</option><option>Culture</option>
       </select>
-      <button class="filter-clear" onclick="clearFilters()" aria-label="Clear all filters">
-        <i class="ti ti-x" style="font-size:12px" aria-hidden="true"></i> Clear
-      </button>
+      <button class="filter-clear" onclick="clearFilters()"><i class="ti ti-x" style="font-size:12px"></i> Clear</button>
     </div>
     <div class="section-header">
       <div class="section-title">Research Papers</div>
-      <div class="section-count" id="resultsCount" aria-label="Results count">Showing all papers</div>
+      <div class="section-count" id="resultsCount"></div>
     </div>
-    <div class="cards-grid" id="cardsContainer" role="list"></div>
-    <div id="paginationWrap" class="pagination-wrap" role="navigation" aria-label="Pagination"></div>
+    <div id="cardsContainer"></div>
   </div>
 </div>
 
+<!-- RESOURCES -->
 <div class="page" id="page-resources">
   <div class="section">
     <div class="section-header"><div class="section-title">Resource Hub</div></div>
-    <p style="font-size:13px;color:var(--text-muted);margin-bottom:1.5rem">Curated, credible external references to support your research journey.</p>
+    <p style="font-size:13px;color:#6b7a99;margin-bottom:1.5rem">Curated, credible external references to support your research journey.</p>
     <div class="resource-grid">
-      <div class="resource-card">
-        <div class="resource-type">Citation Guide</div>
-        <div class="resource-name">APA 7th Edition Guide</div>
-        <div class="resource-desc">The standard citation format for most academic research in Philippine Senior High.</div>
-        <button class="resource-link" onclick="openLink('https://apastyle.apa.org/')"><i class="ti ti-external-link" style="font-size:13px" aria-hidden="true"></i> Visit APA Style</button>
-      </div>
-      <div class="resource-card">
-        <div class="resource-type">Research Database</div>
-        <div class="resource-name">Google Scholar</div>
-        <div class="resource-desc">Free academic search engine for peer-reviewed papers, theses, and books.</div>
-        <button class="resource-link" onclick="openLink('https://scholar.google.com/')"><i class="ti ti-external-link" style="font-size:13px" aria-hidden="true"></i> Search papers</button>
-      </div>
-      <div class="resource-card">
-        <div class="resource-type">Open Access</div>
-        <div class="resource-name">DOAJ — Directory of OA Journals</div>
-        <div class="resource-desc">Over 20,000 peer-reviewed, open-access journals freely available for citation.</div>
-        <button class="resource-link" onclick="openLink('https://doaj.org/')"><i class="ti ti-external-link" style="font-size:13px" aria-hidden="true"></i> Browse journals</button>
-      </div>
-      <div class="resource-card">
-        <div class="resource-type">Philippine Research</div>
-        <div class="resource-name">HERDIN — Health Research DB</div>
-        <div class="resource-desc">Philippine-based health and sciences research database by the DOH & DOST.</div>
-        <button class="resource-link" onclick="openLink('https://herdin.ph/')"><i class="ti ti-external-link" style="font-size:13px" aria-hidden="true"></i> Access HERDIN</button>
-      </div>
-      <div class="resource-card">
-        <div class="resource-type">Methodology</div>
-        <div class="resource-name">Research Rundowns</div>
-        <div class="resource-desc">Plain-English explanations of research methods, statistics, and design types.</div>
-        <button class="resource-link" onclick="openLink('https://researchrundowns.com/')"><i class="ti ti-external-link" style="font-size:13px" aria-hidden="true"></i> Learn methods</button>
-      </div>
-      <div class="resource-card">
-        <div class="resource-type">Plagiarism Checker</div>
-        <div class="resource-name">Grammarly / Turnitin</div>
-        <div class="resource-desc">Verify your work's originality before submission. Turnitin is the institutional standard.</div>
-        <button class="resource-link" onclick="openLink('https://www.turnitin.com/')"><i class="ti ti-external-link" style="font-size:13px" aria-hidden="true"></i> Check Turnitin</button>
-      </div>
+      <div class="resource-card"><div class="resource-type">Citation Guide</div><div class="resource-name">APA 7th Edition Guide</div><div class="resource-desc">The standard citation format for most academic research in Philippine Senior High.</div><a class="resource-link" href="https://apastyle.apa.org/" target="_blank"><i class="ti ti-external-link" style="font-size:13px"></i> Visit APA Style</a></div>
+      <div class="resource-card"><div class="resource-type">Research Database</div><div class="resource-name">Google Scholar</div><div class="resource-desc">Free academic search engine for peer-reviewed papers, theses, and books.</div><a class="resource-link" href="https://scholar.google.com/" target="_blank"><i class="ti ti-external-link" style="font-size:13px"></i> Search papers</a></div>
+      <div class="resource-card"><div class="resource-type">Open Access</div><div class="resource-name">DOAJ</div><div class="resource-desc">Over 20,000 peer-reviewed, open-access journals freely available for citation.</div><a class="resource-link" href="https://doaj.org/" target="_blank"><i class="ti ti-external-link" style="font-size:13px"></i> Browse journals</a></div>
+      <div class="resource-card"><div class="resource-type">Philippine Research</div><div class="resource-name">HERDIN</div><div class="resource-desc">Philippine-based health and sciences research database by the DOH & DOST.</div><a class="resource-link" href="https://herdin.ph/" target="_blank"><i class="ti ti-external-link" style="font-size:13px"></i> Access HERDIN</a></div>
+      <div class="resource-card"><div class="resource-type">Methodology</div><div class="resource-name">Research Rundowns</div><div class="resource-desc">Plain-English explanations of research methods, statistics, and design types.</div><a class="resource-link" href="https://researchrundowns.com/" target="_blank"><i class="ti ti-external-link" style="font-size:13px"></i> Learn methods</a></div>
+      <div class="resource-card"><div class="resource-type">Plagiarism Checker</div><div class="resource-name">Turnitin</div><div class="resource-desc">Verify your work's originality before submission — the institutional standard.</div><a class="resource-link" href="https://www.turnitin.com/" target="_blank"><i class="ti ti-external-link" style="font-size:13px"></i> Check Turnitin</a></div>
     </div>
   </div>
 </div>
 
-<div id="downloadModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
-  <div class="modal-box">
-    <div class="modal-icon"><i class="ti ti-file-download" aria-hidden="true"></i></div>
-    <div class="modal-title" id="modalTitle">Preparing Your Download</div>
-    <div class="modal-paper-name" id="modalDesc"></div>
-    <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack">
-      <div class="progress-bar" id="progressBar"></div>
+<!-- ADMIN -->
+<div class="page" id="page-admin">
+  <!-- Gate -->
+  <div id="adminGate" class="admin-gate">
+    <div class="gate-card">
+      <div class="gate-icon"><i class="ti ti-lock"></i></div>
+      <div class="gate-title">Admin Access</div>
+      <div class="gate-sub">This area is restricted to authorized teachers and administrators of FEPS.</div>
+      <div class="form-group">
+        <label for="adminPassword">Password</label>
+        <input type="password" id="adminPassword" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')checkPassword()">
+      </div>
+      <button class="btn-full" onclick="checkPassword()">Sign In</button>
+      <div class="error-msg" id="gateError" style="display:none">Incorrect password. Please try again.</div>
     </div>
-    <div class="progress-label" id="progressLabel">Initializing…</div>
-    <button class="modal-close" id="modalCloseBtn" onclick="closeModal()">
-      <i class="ti ti-check" style="font-size:13px;margin-right:5px" aria-hidden="true"></i> Done — Close
-    </button>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="adminDashboard" style="display:none">
+    <div class="section" style="border-bottom:0.5px solid var(--card-border);display:flex;align-items:center;justify-content:space-between;padding-bottom:1rem">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700">Admin Dashboard</div>
+        <div style="font-size:13px;color:#6b7a99;margin-top:3px">Manage research papers and uploads</div>
+      </div>
+      <button class="badge-logout" onclick="logoutAdmin()"><i class="ti ti-logout" style="font-size:12px"></i> Sign out</button>
+    </div>
+
+    <!-- Upload Form -->
+    <div class="upload-section">
+      <div class="upload-title">Upload New Research Paper</div>
+      <div class="upload-sub">Fill in the metadata and attach the PDF file. All fields are required except Tips.</div>
+
+      <div class="form-grid">
+        <div class="form-full form-group">
+          <label>Research Title *</label>
+          <input type="text" id="upTitle" placeholder="Full title of the research paper">
+        </div>
+        <div class="form-full form-group">
+          <label>Authors *</label>
+          <input type="text" id="upAuthors" placeholder="e.g. Juan Dela Cruz, Maria Santos">
+        </div>
+        <div class="form-group">
+          <label>Academic Strand *</label>
+          <select id="upStrand" style="width:100%">
+            <option value="">Select strand</option>
+            <option>STEM</option><option>HUMSS</option><option>ABM</option><option>GAS</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Year of Submission *</label>
+          <input type="number" id="upYear" placeholder="e.g. 2026" min="2020" max="2030">
+        </div>
+        <div class="form-full form-group">
+          <label>Themes / Keywords * (select all that apply)</label>
+          <div class="theme-checkboxes">
+            <label class="theme-check"><input type="checkbox" value="Mental Health"> Mental Health</label>
+            <label class="theme-check"><input type="checkbox" value="Economics"> Economics</label>
+            <label class="theme-check"><input type="checkbox" value="Technology"> Technology</label>
+            <label class="theme-check"><input type="checkbox" value="Environment"> Environment</label>
+            <label class="theme-check"><input type="checkbox" value="Society"> Society</label>
+            <label class="theme-check"><input type="checkbox" value="Business"> Business</label>
+            <label class="theme-check"><input type="checkbox" value="Education"> Education</label>
+            <label class="theme-check"><input type="checkbox" value="Health"> Health</label>
+            <label class="theme-check"><input type="checkbox" value="Culture"> Culture</label>
+          </div>
+        </div>
+        <div class="form-full form-group">
+          <label>Tips from the Authors <span style="color:#9baacf;font-weight:400">(optional)</span></label>
+          <textarea id="upTips" placeholder="Share advice on methodology, common pitfalls, or lessons learned for future researchers…"></textarea>
+        </div>
+        <div class="form-full form-group">
+          <label>PDF File *</label>
+          <div class="file-drop" id="fileDrop">
+            <input type="file" id="upFile" accept=".pdf" onchange="handleFileSelect(this)">
+            <div class="file-drop-icon"><i class="ti ti-file-upload"></i></div>
+            <div class="file-drop-text"><strong>Click to choose</strong> or drag & drop a PDF here</div>
+            <div class="file-selected" id="fileSelectedName" style="display:none"></div>
+          </div>
+          <div class="upload-progress" id="uploadProgress">
+            <div class="upload-progress-bar" id="uploadProgressBar"></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-full" id="uploadBtn" onclick="uploadPaper()" style="margin-top:0.5rem">
+        <span id="uploadBtnText">Upload Research Paper</span>
+      </button>
+      <div id="uploadMsg" style="margin-top:8px;font-size:12px"></div>
+    </div>
+
+    <hr class="divider" style="margin:0 2rem">
+
+    <!-- Manage Papers -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Manage Papers</div>
+        <button class="filter-clear" onclick="loadAllPapers()"><i class="ti ti-refresh" style="font-size:12px"></i> Refresh</button>
+      </div>
+      <div id="adminPapersList"><div class="loading">Loading papers…</div></div>
+    </div>
   </div>
 </div>
 
 <script>
-/* =====================================================
-   DATA
-   ===================================================== */
-const STRAND_COLORS = {
-  STEM:  '#1a6b8a',
-  HUMSS: '#7a3b8a',
-  ABM:   '#1a6b3a',
-  GAS:   '#288fb8' // Updated to Cyan
-};
+const SUPABASE_URL = 'https://epwjzjzhaukerjejekpu.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVwd2p6anpoYXVrZXJqZWpla3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDg0MzksImV4cCI6MjA5NDM4NDQzOX0.UWWtEpoCtrYZUF2nJxPlM7P1uzeEzNclxJGEQilhFG4';
+const BUCKET = 'research-pdfs';
+const ADMIN_PASSWORD = 'feps2026admin';
 
-const FEATURED_IDS = [1, 2, 3, 5]; // IDs of editor's picks
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const PAPERS = [
-  {id:1,  title:'Effectiveness of Organic Fertilizers on Monggo Bean Growth in Urban Gardens',      authors:'A. Reyes, M. Cruz, J. Santos',  strand:'STEM',  year:2026, themes:['Environment','Technology'], tips:'Do not skip your control group — we almost did and it would have invalidated everything. Also, document every watering cycle.'},
-  {id:2,  title:'Social Media Use and Academic Performance Among Grade 11 Students',                 authors:'L. Garcia, P. Dela Rosa',        strand:'HUMSS', year:2026, themes:['Mental Health','Society'],   tips:'Your survey questions must be pre-tested. Ours had an ambiguous item that skewed 20% of responses. Pilot test with at least 10 people.'},
-  {id:3,  title:'Feasibility of a Student-Run Online Thrift Store in the School Community',         authors:'K. Tan, I. Lim, B. Ong',         strand:'ABM',   year:2026, themes:['Business','Economics'],     tips:'The financial projections section is where most ABM papers are weak. Use actual market data — interview real sellers.'},
-  {id:4,  title:'Awareness of Climate Change Among Senior High School Students',                    authors:'C. Mendoza, R. Bautista',        strand:'GAS',   year:2026, themes:['Environment','Society'],     tips:'For Likert-scale surveys, always include a neutral option. And make sure your locale is specific — we said "Metro Manila" and our adviser flagged it as too broad.'},
-  {id:5,  title:'IoT-Based Plant Watering System Using Arduino Uno',                                authors:'D. Villanueva, E. Macaraeg',     strand:'STEM',  year:2025, themes:['Technology'],                tips:'Budget twice what you think you need for components. Parts fail. Build a backup prototype timeline into your Gantt chart.'},
-  {id:6,  title:'Mental Health Literacy and Help-Seeking Behavior of Adolescents',                  authors:'S. Aquino, T. Navarro',          strand:'HUMSS', year:2025, themes:['Mental Health','Society'],   tips:'Ethics clearance for mental health topics takes time. File it in the first month — not the last. Also, have a referral protocol ready.'},
-  {id:7,  title:'Consumer Behavior Towards Sustainable Products in Quezon City',                    authors:'F. Rivera, G. Castillo',         strand:'ABM',   year:2025, themes:['Economics','Business'],     tips:'Random sampling is harder than it sounds. We ended up with convenience sampling and had to justify it extensively in Chapter 3.'},
-  {id:8,  title:'Effect of Bilingual Instruction on Reading Comprehension in Fil-Am Households',    authors:'H. Torres, V. Espiritu',         strand:'HUMSS', year:2024, themes:['Society'],                   tips:'Your theoretical framework should not be a list of theories. It should be a connected narrative explaining how each theory relates to your specific problem.'},
-  {id:9,  title:'Profitability Analysis of Sari-Sari Stores in Barangay-Level Markets',            authors:'N. Ocampo, R. dela Paz',         strand:'ABM',   year:2024, themes:['Economics','Business'],     tips:'Interview your key informants at least twice. First interview for baseline, second to clarify and validate. Single-interview studies miss too much context.'},
-  {id:10, title:'Biodegradability of Selected Plastic Alternatives in Philippine Coastal Soil',    authors:'O. Pascual, W. Flores',          strand:'STEM',  year:2024, themes:['Environment','Technology'], tips:'Lab time is scarce. Book it three weeks in advance. Also, photograph every stage — you will need those for your Chapter 4 presentation.'},
-];
+const STRAND_COLORS = {STEM:'#1a6b8a',HUMSS:'#7a3b8a',ABM:'#1a6b3a',GAS:'#c8963e'};
+let allPapers = [];
+let activeSearch = '';
+let isAdmin = false;
 
-/* =====================================================
-   STATE
-   ===================================================== */
-let activeStrandFilter = '';
-let searchQuery        = '';
-let currentPage        = 1;
-const PAGE_SIZE        = 6;
-let filteredPapers     = [...PAPERS];
-let searchDebounceTimer = null;
-
-/* =====================================================
-   DARK MODE
-   ===================================================== */
-(function initTheme() {
-  const saved = localStorage.getItem('feps-theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  if (saved === 'dark' || (!saved && prefersDark)) applyDark(true, false);
-})();
-
-function applyDark(isDark, save = true) {
-  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-  const icon  = document.getElementById('darkIcon');
-  const label = document.getElementById('darkLabel');
-  const btn   = document.getElementById('darkToggle');
-  if (icon)  icon.className  = isDark ? 'ti ti-sun'  : 'ti ti-moon';
-  if (label) label.textContent = isDark ? 'Light' : 'Dark';
-  if (btn)   btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-  if (save)  localStorage.setItem('feps-theme', isDark ? 'dark' : 'light');
-}
-
-function toggleDark() {
-  const current = document.documentElement.getAttribute('data-theme');
-  applyDark(current !== 'dark');
-}
-
-/* =====================================================
-   COUNTS
-   ===================================================== */
-function countsByStrand() {
-  const c = { STEM:0, HUMSS:0, ABM:0, GAS:0 };
-  PAPERS.forEach(p => c[p.strand]++);
-  return c;
-}
-
-function updateCounts() {
-  const c = countsByStrand();
-  ['stem','humss','abm','gas'].forEach(s => {
-    const key = s.toUpperCase();
-    document.querySelectorAll(`[id$="-${s}"]`).forEach(el => {
-      el.textContent = `${c[key]} paper${c[key] !== 1 ? 's' : ''}`;
-    });
-  });
-}
-
-/* =====================================================
-   PAGE NAVIGATION
-   ===================================================== */
+// ── NAVIGATION ──
 function showPage(name, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
   if (btn) btn.classList.add('active');
-  if (name === 'browse') {
-    activeStrandFilter = '';
-    document.getElementById('filterStrand').value = '';
-    document.getElementById('browseStrandTitle').textContent = 'All Research';
-    document.getElementById('browseStrandSub').textContent   = 'Browse all submitted research papers.';
-    applyFilters();
-  }
+  if (name === 'browse') { renderCards(allPapers); }
+  if (name === 'home') loadCounts();
+}
+
+function showAdminPage() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-admin').classList.add('active');
+  if (isAdmin) { document.getElementById('adminGate').style.display = 'none'; document.getElementById('adminDashboard').style.display = 'block'; loadAllPapers(); }
 }
 
 function showStrandPage(strand) {
-  activeStrandFilter = strand;
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  const navBrowse = document.querySelectorAll('.nav-btn')[2];
-  if (navBrowse) navBrowse.classList.add('active');
+  document.querySelectorAll('.nav-btn')[2].classList.add('active');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-browse').classList.add('active');
   document.getElementById('filterStrand').value = strand;
-  document.getElementById('browseStrandTitle').textContent = `${strand} Research Archive`;
-  const labels = {
-    STEM:  'Science, Technology, Engineering & Mathematics',
-    HUMSS: 'Humanities & Social Sciences',
-    ABM:   'Accountancy, Business & Management',
-    GAS:   'General Academic Strand'
-  };
+  const labels = {STEM:'Science, Technology, Engineering & Mathematics',HUMSS:'Humanities & Social Sciences',ABM:'Accountancy, Business & Management',GAS:'General Academic Strand'};
+  document.getElementById('browseStrandTitle').textContent = strand + ' Research Archive';
   document.getElementById('browseStrandSub').textContent = labels[strand];
-  currentPage = 1;
   applyFilters();
 }
 
-/* =====================================================
-   FEATURED / EDITOR'S PICKS
-   ===================================================== */
-function renderFeatured() {
-  const grid = document.getElementById('featuredGrid');
-  if (!grid) return;
-  const picks = PAPERS.filter(p => FEATURED_IDS.includes(p.id));
-  grid.innerHTML = picks.map(p => {
-    const color = STRAND_COLORS[p.strand];
-    const themeTags = p.themes.map(t =>
-      `<span class="tag tag-theme" style="font-size:11px">${t}</span>`
-    ).join('');
-    return `
-      <div class="featured-card" role="article" aria-label="Editor's pick: ${p.title}">
-        <div class="featured-badge"><i class="ti ti-award" style="font-size:10px"></i> Editor's Pick</div>
-        <div class="featured-card-body">
-          <div class="featured-strand-bar" style="background:${color}"></div>
-          <div class="featured-card-title">${p.title}</div>
-          <div class="featured-card-authors">
-            <i class="ti ti-users" style="font-size:11px;vertical-align:-1px" aria-hidden="true"></i>
-            ${p.authors}
-          </div>
-        </div>
-        <div class="featured-card-footer">
-          <div class="featured-tags">
-            <span class="tag tag-strand">${p.strand}</span>
-            <span class="tag tag-year">${p.year}</span>
-            ${themeTags}
-          </div>
-          <button class="featured-card-btn" onclick="openDownloadModal('${p.title.replace(/'/g,"\\'")}')">
-            <i class="ti ti-file-download" style="font-size:12px" aria-hidden="true"></i> PDF
-          </button>
-        </div>
-      </div>`;
-  }).join('');
+// ── DATA ──
+async function loadPapers() {
+  const { data, error } = await sb.from('papers').select('*').order('created_at', { ascending: false });
+  if (error) { showToast('Failed to load papers', 'error'); return; }
+  allPapers = data || [];
+  renderCards(allPapers);
+  loadCounts();
 }
 
-/* =====================================================
-   SKELETON LOADER
-   ===================================================== */
-function showSkeleton(container, count = 4) {
-  container.innerHTML = Array.from({length: count}, () => `
-    <div class="skeleton-card" aria-hidden="true">
-      <div class="skel skel-bar"></div>
-      <div class="skel skel-h1"></div>
-      <div class="skel skel-h2"></div>
-      <div class="skel skel-txt"></div>
-      <div class="skel-row">
-        <div class="skel skel-pill"></div>
-        <div class="skel skel-pill"></div>
-        <div class="skel skel-pill"></div>
-      </div>
-    </div>`
-  ).join('');
+async function loadCounts() {
+  const strands = ['STEM','HUMSS','ABM','GAS'];
+  strands.forEach(s => {
+    const count = allPapers.filter(p => p.strand === s).length;
+    ['cnt-','cnt2-'].forEach(prefix => {
+      const el = document.getElementById(prefix + s);
+      if (el) el.textContent = count + ' paper' + (count !== 1 ? 's' : '');
+    });
+  });
 }
 
-/* =====================================================
-   RENDER CARDS + PAGINATION
-   ===================================================== */
+async function loadAllPapers() {
+  document.getElementById('adminPapersList').innerHTML = '<div class="loading">Loading…</div>';
+  const { data, error } = await sb.from('papers').select('*').order('created_at', { ascending: false });
+  if (error) { document.getElementById('adminPapersList').innerHTML = '<div class="no-results">Failed to load.</div>'; return; }
+  allPapers = data || [];
+  renderAdminList(allPapers);
+  loadCounts();
+}
+
+// ── RENDER CARDS ──
 function renderCards(papers) {
   const container = document.getElementById('cardsContainer');
-  const pagWrap   = document.getElementById('paginationWrap');
-  const countEl   = document.getElementById('resultsCount');
-  const liveEl    = document.getElementById('liveRegion');
-
-  if (!papers || !papers.length) {
-    container.innerHTML = `
-      <div class="empty" role="status">
-        <i class="ti ti-zoom-cancel" aria-hidden="true"></i>
-        <p>No papers match your filters.</p>
-      </div>`;
-    if (countEl) countEl.textContent = '0 papers found';
-    if (liveEl)  liveEl.textContent  = 'No papers found matching your search.';
-    if (pagWrap) pagWrap.innerHTML   = '';
+  const strand = document.getElementById('filterStrand').value;
+  const year = document.getElementById('filterYear').value;
+  const theme = document.getElementById('filterTheme').value;
+  let list = papers;
+  if (strand) list = list.filter(p => p.strand === strand);
+  if (year) list = list.filter(p => String(p.year) === year);
+  if (theme) list = list.filter(p => p.themes && p.themes.includes(theme));
+  if (activeSearch) list = list.filter(p =>
+    p.title.toLowerCase().includes(activeSearch) ||
+    p.authors.toLowerCase().includes(activeSearch) ||
+    p.strand.toLowerCase().includes(activeSearch) ||
+    (p.themes || []).some(t => t.toLowerCase().includes(activeSearch))
+  );
+  document.getElementById('resultsCount').textContent = list.length + ' paper' + (list.length !== 1 ? 's' : '');
+  if (!list.length) {
+    container.innerHTML = '<div class="no-results"><i class="ti ti-zoom-cancel"></i>No papers match your filters.</div>';
     return;
   }
-
-  const total      = papers.length;
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-  currentPage      = Math.min(currentPage, totalPages);
-  const start      = (currentPage - 1) * PAGE_SIZE;
-  const pageItems  = papers.slice(start, start + PAGE_SIZE);
-
-  const countText = `${total} paper${total !== 1 ? 's' : ''}`;
-  if (countEl) countEl.textContent = countText;
-  if (liveEl)  liveEl.textContent  = `${countText} found.`;
-
-  container.innerHTML = pageItems.map((p, i) => {
-    const color = STRAND_COLORS[p.strand];
-    const themeTags = p.themes.map(t =>
-      `<span class="tag tag-theme">${t}</span>`
-    ).join('');
-    return `
-      <div class="research-card" role="listitem" style="animation-delay:${i * 0.04}s">
-        <div class="card-header">
-          <div class="card-strand-bar" style="background:${color}"></div>
-          <div class="card-title">${p.title}</div>
-          <div class="card-authors">
-            <i class="ti ti-users" style="font-size:12px;vertical-align:-1px" aria-hidden="true"></i>
-            ${p.authors}
-          </div>
-          <div class="tags">
-            <span class="tag tag-strand">${p.strand}</span>
-            <span class="tag tag-year">${p.year}</span>
-            ${themeTags}
-          </div>
+  container.innerHTML = list.map(p => `
+    <div class="research-card">
+      <div class="card-header">
+        <div class="card-strand-bar" style="background:${STRAND_COLORS[p.strand]||'#888'}"></div>
+        <div class="card-title">${escHtml(p.title)}</div>
+        <div class="card-authors"><i class="ti ti-users" style="font-size:12px;vertical-align:-1px"></i> ${escHtml(p.authors)}</div>
+        <div class="tags">
+          <span class="tag tag-strand">${p.strand}</span>
+          <span class="tag tag-year">${p.year}</span>
+          ${(p.themes||[]).map(t=>`<span class="tag tag-theme">${escHtml(t)}</span>`).join('')}
         </div>
-        <div class="card-body">
-          <div class="card-actions">
-            <button class="btn-download" onclick="openDownloadModal('${p.title.replace(/'/g,"\\'")}')">
-              <i class="ti ti-file-download" style="font-size:14px" aria-hidden="true"></i> Download PDF
-            </button>
-            <button class="btn-tips" onclick="toggleTips(${p.id})" aria-expanded="false" id="tipsBtn-${p.id}">
-              <i class="ti ti-bulb" style="font-size:14px" aria-hidden="true"></i> Author Tips
-            </button>
-          </div>
-          <div class="tips-panel" id="tips-${p.id}" role="region" aria-label="Tips from the authors">
-            <div class="tips-title">💡 Tips from the authors</div>
-            <div class="tips-text">${p.tips}</div>
-          </div>
+      </div>
+      <div class="card-body">
+        <div class="card-actions">
+          <button class="btn-primary" onclick="openPdf('${escHtml(p.pdf_url)}','${escHtml(p.title.replace(/'/g,"\\'"))}')">
+            <i class="ti ti-eye" style="font-size:14px"></i> View PDF
+          </button>
+          <a class="btn-secondary" href="${escHtml(p.pdf_url)}" download target="_blank" style="text-decoration:none">
+            <i class="ti ti-download" style="font-size:14px"></i> Download
+          </a>
+          ${p.tips ? `<button class="btn-secondary" onclick="toggleTips('${p.id}')" id="tipsBtn-${p.id}">
+            <i class="ti ti-bulb" style="font-size:14px"></i> Author Tips
+          </button>` : ''}
         </div>
-      </div>`;
-  }).join('');
-
-  // Render pagination
-  if (pagWrap) renderPagination(totalPages, pagWrap);
+        ${p.tips ? `<div class="tips-panel" id="tips-${p.id}">
+          <div class="tips-title">💡 Tips from the authors</div>
+          <div class="tips-text">${escHtml(p.tips)}</div>
+        </div>` : ''}
+      </div>
+    </div>
+  `).join('');
 }
 
-function renderPagination(totalPages, wrap) {
-  if (totalPages <= 1) { wrap.innerHTML = ''; return; }
-  let html = '';
-
-  // Prev
-  html += `<button class="pag-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} aria-label="Previous page">
-    <i class="ti ti-chevron-left" style="font-size:13px" aria-hidden="true"></i>
-  </button>`;
-
-  // Pages with ellipsis
-  for (let i = 1; i <= totalPages; i++) {
-    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
-      html += `<button class="pag-btn ${i === currentPage ? 'active' : ''}" onclick="goPage(${i})" aria-label="Page ${i}" aria-current="${i === currentPage ? 'page' : 'false'}">${i}</button>`;
-    } else if (i === currentPage - 2 || i === currentPage + 2) {
-      html += `<span class="pag-ellipsis">…</span>`;
-    }
-  }
-
-  // Next
-  html += `<button class="pag-btn" onclick="goPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} aria-label="Next page">
-    <i class="ti ti-chevron-right" style="font-size:13px" aria-hidden="true"></i>
-  </button>`;
-
-  wrap.innerHTML = html;
+function renderAdminList(papers) {
+  const container = document.getElementById('adminPapersList');
+  if (!papers.length) { container.innerHTML = '<div class="no-results" style="padding:2rem"><i class="ti ti-inbox"></i><p>No papers uploaded yet.</p></div>'; return; }
+  container.innerHTML = '<div style="display:grid;gap:10px">' + papers.map(p => `
+    <div class="admin-paper-card">
+      <div class="admin-paper-info">
+        <div class="admin-paper-title">${escHtml(p.title)}</div>
+        <div class="admin-paper-meta">${p.strand} · ${p.year} · ${escHtml(p.authors)}</div>
+      </div>
+      <div class="admin-actions">
+        <button class="btn-secondary" onclick="openPdf('${escHtml(p.pdf_url)}','${escHtml(p.title.replace(/'/g,"\\'"))}')">
+          <i class="ti ti-eye" style="font-size:13px"></i>
+        </button>
+        <button class="btn-danger" onclick="deletePaper('${p.id}','${escHtml(p.pdf_url.split('/').pop())}')">
+          <i class="ti ti-trash" style="font-size:13px"></i>
+        </button>
+      </div>
+    </div>
+  `).join('') + '</div>';
 }
 
-function goPage(n) {
-  currentPage = n;
-  renderCards(filteredPapers);
-  document.getElementById('browseHeader').scrollIntoView({ behavior: 'smooth' });
-}
-
-/* =====================================================
-   TIPS TOGGLE
-   ===================================================== */
-function toggleTips(id) {
-  const panel = document.getElementById(`tips-${id}`);
-  const btn   = document.getElementById(`tipsBtn-${id}`);
-  const open  = panel.classList.toggle('open');
-  btn.setAttribute('aria-expanded', open);
-}
-
-/* =====================================================
-   FILTERS & SEARCH
-   ===================================================== */
-function applyFilters() {
-  const strand = document.getElementById('filterStrand').value;
-  const year   = document.getElementById('filterYear').value;
-  const theme  = document.getElementById('filterTheme').value;
-
-  filteredPapers = PAPERS.filter(p => {
-    if (strand && p.strand !== strand) return false;
-    if (year   && p.year   !== parseInt(year)) return false;
-    if (theme  && !p.themes.includes(theme)) return false;
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      return (
-        p.title.toLowerCase().includes(q) ||
-        p.authors.toLowerCase().includes(q) ||
-        p.strand.toLowerCase().includes(q) ||
-        p.themes.some(t => t.toLowerCase().includes(q))
-      );
-    }
-    return true;
-  });
-
-  currentPage = 1;
-  renderCards(filteredPapers);
-}
-
+// ── FILTERS ──
+function applyFilters() { renderCards(allPapers); }
 function clearFilters() {
   document.getElementById('filterStrand').value = '';
-  document.getElementById('filterYear').value   = '';
-  document.getElementById('filterTheme').value  = '';
-  searchQuery = '';
-  activeStrandFilter = '';
-  filteredPapers = [...PAPERS];
-  currentPage = 1;
-  renderCards(filteredPapers);
+  document.getElementById('filterYear').value = '';
+  document.getElementById('filterTheme').value = '';
+  activeSearch = '';
+  renderCards(allPapers);
 }
 
 function handleGlobalSearch(val) {
-  const clearBtn = document.getElementById('searchClearBtn');
-  if (clearBtn) {
-    clearBtn.classList.toggle('visible', val.length > 0);
-  }
-
-  // Show skeleton while debouncing
-  if (val.length > 0) {
-    const container = document.getElementById('cardsContainer');
-    if (container) showSkeleton(container, 4);
-
-    // Navigate to browse
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('page-browse').classList.add('active');
-    const navBrowse = document.querySelectorAll('.nav-btn')[2];
-    if (navBrowse) navBrowse.classList.add('active');
-    document.getElementById('browseStrandTitle').textContent = 'Search Results';
-    document.getElementById('browseStrandSub').textContent   = `Searching for "${val}"…`;
-  }
-
-  // Debounce actual filter
-  clearTimeout(searchDebounceTimer);
-  searchDebounceTimer = setTimeout(() => {
-    searchQuery = val.toLowerCase();
-    if (val.length > 0) {
-      document.getElementById('browseStrandSub').textContent = `Results for "${val}"`;
-      applyFilters();
-    } else {
-      // Returned to empty — restore home
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById('page-home').classList.add('active');
-      document.querySelectorAll('.nav-btn')[0].classList.add('active');
-    }
-  }, 350);
-}
-
-function clearGlobalSearch() {
-  const input = document.getElementById('globalSearch');
-  const clearBtn = document.getElementById('searchClearBtn');
-  if (input) input.value = '';
-  if (clearBtn) clearBtn.classList.remove('visible');
-  searchQuery = '';
-  filteredPapers = [...PAPERS];
-  // Return to home
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  activeSearch = val.toLowerCase();
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-home').classList.add('active');
-  document.querySelectorAll('.nav-btn')[0].classList.add('active');
+  document.querySelectorAll('.nav-btn')[2].classList.add('active');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-browse').classList.add('active');
+  document.getElementById('browseStrandTitle').textContent = 'Search Results';
+  document.getElementById('browseStrandSub').textContent = `Showing results for "${val}"`;
+  renderCards(allPapers);
 }
 
-/* =====================================================
-   DOWNLOAD MODAL
-   ===================================================== */
-let modalTimer = null;
-
-function openDownloadModal(title) {
-  const modal    = document.getElementById('downloadModal');
-  const bar      = document.getElementById('progressBar');
-  const label    = document.getElementById('progressLabel');
-  const closeBtn = document.getElementById('modalCloseBtn');
-  const track    = document.getElementById('progressTrack');
-  const desc     = document.getElementById('modalDesc');
-
-  // Reset state
-  bar.style.width = '0%';
-  track.setAttribute('aria-valuenow', '0');
-  label.textContent = 'Initializing…';
-  closeBtn.classList.remove('visible');
-  desc.textContent = title;
-
-  modal.classList.add('open');
+// ── PDF MODAL ──
+function openPdf(url, title) {
+  document.getElementById('pdfFrame').src = url;
+  document.getElementById('pdfModalTitle').textContent = title;
+  document.getElementById('pdfDownloadBtn').href = url;
+  document.getElementById('pdfModal').classList.add('open');
   document.body.style.overflow = 'hidden';
-
-  // Trap focus
-  setTimeout(() => closeBtn.focus(), 250);
-
-  // Simulated progress
-  const steps = [
-    { pct: 15, msg: 'Locating file…',        delay: 200  },
-    { pct: 38, msg: 'Verifying document…',   delay: 600  },
-    { pct: 62, msg: 'Compressing PDF…',      delay: 1100 },
-    { pct: 85, msg: 'Almost ready…',         delay: 1700 },
-    { pct: 100, msg: 'Download ready! ✓',    delay: 2300 },
-  ];
-
-  steps.forEach(({pct, msg, delay}) => {
-    setTimeout(() => {
-      bar.style.width = pct + '%';
-      track.setAttribute('aria-valuenow', pct);
-      label.textContent = msg;
-      if (pct === 100) closeBtn.classList.add('visible');
-    }, delay);
-  });
 }
-
-function closeModal() {
-  const modal = document.getElementById('downloadModal');
-  modal.classList.remove('open');
+function closePdfModal(e) {
+  if (e && e.target !== document.getElementById('pdfModal')) return;
+  document.getElementById('pdfModal').classList.remove('open');
+  document.getElementById('pdfFrame').src = '';
   document.body.style.overflow = '';
 }
 
-// Close modal on backdrop click
-document.getElementById('downloadModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-
-// Close modal on Escape
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-});
-
-/* =====================================================
-   UTILITIES
-   ===================================================== */
-function openLink(url) {
-  window.open(url, '_blank', 'noopener,noreferrer');
+// ── TIPS TOGGLE ──
+function toggleTips(id) {
+  const panel = document.getElementById('tips-' + id);
+  if (panel) panel.classList.toggle('open');
 }
 
-// Keyboard activation for role="button" divs
-document.addEventListener('keydown', e => {
-  if ((e.key === 'Enter' || e.key === ' ') && e.target.getAttribute('role') === 'button') {
-    e.preventDefault();
-    e.target.click();
+// ── ADMIN AUTH ──
+function checkPassword() {
+  const pw = document.getElementById('adminPassword').value;
+  if (pw === ADMIN_PASSWORD) {
+    isAdmin = true;
+    document.getElementById('adminGate').style.display = 'none';
+    document.getElementById('adminDashboard').style.display = 'block';
+    document.getElementById('adminNavBtn').innerHTML = '<i class="ti ti-shield-check" style="font-size:13px"></i> Admin';
+    loadAllPapers();
+  } else {
+    document.getElementById('gateError').style.display = 'block';
   }
-});
+}
+function logoutAdmin() {
+  isAdmin = false;
+  document.getElementById('adminDashboard').style.display = 'none';
+  document.getElementById('adminGate').style.display = 'flex';
+  document.getElementById('adminPassword').value = '';
+  document.getElementById('gateError').style.display = 'none';
+  document.getElementById('adminNavBtn').innerHTML = '<i class="ti ti-lock" style="font-size:13px"></i> Admin';
+  showPage('home', document.querySelector('.nav-btn'));
+}
 
-/* =====================================================
-   INIT
-   ===================================================== */
-updateCounts();
-renderFeatured();
-filteredPapers = [...PAPERS];
-renderCards(filteredPapers);
+// ── FILE SELECT ──
+function handleFileSelect(input) {
+  if (input.files[0]) {
+    document.getElementById('fileSelectedName').textContent = '📄 ' + input.files[0].name;
+    document.getElementById('fileSelectedName').style.display = 'block';
+  }
+}
+
+// ── UPLOAD ──
+async function uploadPaper() {
+  const title = document.getElementById('upTitle').value.trim();
+  const authors = document.getElementById('upAuthors').value.trim();
+  const strand = document.getElementById('upStrand').value;
+  const year = parseInt(document.getElementById('upYear').value);
+  const tips = document.getElementById('upTips').value.trim();
+  const file = document.getElementById('upFile').files[0];
+  const themes = [...document.querySelectorAll('.theme-check input:checked')].map(c => c.value);
+
+  if (!title || !authors || !strand || !year || !file || !themes.length) {
+    document.getElementById('uploadMsg').innerHTML = '<span style="color:#c0392b">Please fill in all required fields and select at least one theme.</span>';
+    return;
+  }
+
+  const btn = document.getElementById('uploadBtn');
+  btn.disabled = true;
+  document.getElementById('uploadBtnText').textContent = 'Uploading…';
+  document.getElementById('uploadProgress').style.display = 'block';
+  document.getElementById('uploadProgressBar').style.width = '20%';
+
+  const fileName = `${strand}-${year}-${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
+
+  const { data: storageData, error: storageError } = await sb.storage
+    .from(BUCKET)
+    .upload(fileName, file, { contentType: 'application/pdf', upsert: false });
+
+  if (storageError) {
+    document.getElementById('uploadMsg').innerHTML = `<span style="color:#c0392b">Upload failed: ${storageError.message}</span>`;
+    btn.disabled = false;
+    document.getElementById('uploadBtnText').textContent = 'Upload Research Paper';
+    document.getElementById('uploadProgress').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('uploadProgressBar').style.width = '70%';
+
+  const { data: urlData } = sb.storage.from(BUCKET).getPublicUrl(fileName);
+  const pdfUrl = urlData.publicUrl;
+
+  const { error: dbError } = await sb.from('papers').insert([{ title, authors, strand, year, themes, tips: tips || null, pdf_url: pdfUrl }]);
+
+  document.getElementById('uploadProgressBar').style.width = '100%';
+
+  if (dbError) {
+    document.getElementById('uploadMsg').innerHTML = `<span style="color:#c0392b">Database error: ${dbError.message}</span>`;
+  } else {
+    document.getElementById('uploadMsg').innerHTML = '<span style="color:#1a6b3a">✓ Paper uploaded successfully!</span>';
+    document.getElementById('upTitle').value = '';
+    document.getElementById('upAuthors').value = '';
+    document.getElementById('upStrand').value = '';
+    document.getElementById('upYear').value = '';
+    document.getElementById('upTips').value = '';
+    document.getElementById('upFile').value = '';
+    document.getElementById('fileSelectedName').style.display = 'none';
+    document.querySelectorAll('.theme-check input').forEach(c => c.checked = false);
+    showToast('Paper uploaded successfully!', 'success');
+    loadAllPapers();
+  }
+
+  btn.disabled = false;
+  document.getElementById('uploadBtnText').textContent = 'Upload Research Paper';
+  setTimeout(() => { document.getElementById('uploadProgress').style.display = 'none'; document.getElementById('uploadProgressBar').style.width = '0'; }, 1000);
+}
+
+// ── DELETE ──
+async function deletePaper(id, fileName) {
+  if (!confirm('Delete this paper permanently? This cannot be undone.')) return;
+  await sb.storage.from(BUCKET).remove([fileName]);
+  const { error } = await sb.from('papers').delete().eq('id', id);
+  if (error) { showToast('Delete failed: ' + error.message, 'error'); return; }
+  showToast('Paper deleted.', 'success');
+  loadAllPapers();
+}
+
+// ── TOAST ──
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── UTILS ──
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── INIT ──
+loadPapers();
 </script>
 </body>
 </html>

@@ -347,9 +347,30 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
       </select>
       <select id="filterTheme" aria-label="Filter by theme" onchange="applyFilters()">
         <option value="">All Themes</option>
-        <option>Mental Health</option><option>Economics</option><option>Technology</option>
-        <option>Environment</option><option>Society</option><option>Business</option>
-        <option>Education</option><option>Health</option><option>Culture</option>
+        <optgroup label="Social Sciences">
+          <option>Mental Health</option><option>Society</option><option>Culture</option>
+          <option>Gender & Identity</option><option>Politics & Governance</option>
+          <option>Community Development</option><option>Media & Communication</option>
+        </optgroup>
+        <optgroup label="Economics & Business">
+          <option>Economics</option><option>Business</option><option>Entrepreneurship</option>
+          <option>Marketing</option><option>Financial Literacy</option>
+        </optgroup>
+        <optgroup label="Science & Technology">
+          <option>Technology</option><option>Environment</option><option>Health</option>
+          <option>Biology</option><option>Chemistry</option><option>Physics</option>
+          <option>Engineering</option><option>Agriculture</option>
+        </optgroup>
+        <optgroup label="Education & Humanities">
+          <option>Education</option><option>Language & Literature</option>
+          <option>Philosophy & Ethics</option><option>History</option><option>Arts</option>
+        </optgroup>
+      </select>
+      <select id="filterDesign" aria-label="Filter by research design" onchange="applyFilters()">
+        <option value="">All Designs</option>
+        <option value="Quantitative">Quantitative</option>
+        <option value="Qualitative">Qualitative</option>
+        <option value="Mixed Methods">Mixed Methods</option>
       </select>
       <button class="filter-clear" onclick="clearFilters()"><i class="ti ti-x" style="font-size:12px"></i> Clear</button>
     </div>

@@ -18,6 +18,16 @@
   --white:#ffffff;--card-border:rgba(15,32,68,0.12);
   --radius:10px;--success:#1a6b3a;--danger:#8a1a1a;
 }
+html.dark-mode{
+  --navy:#1a1f2e;--navy-mid:#232a3d;--navy-light:#2d3547;
+  --cream:#1a1f2e;--cream-dark:#232a3d;
+  --text-on-navy:#d4cfc5;--text-muted-navy:#8b94b8;
+  --card-border:rgba(255,255,255,0.08);
+}
+html.dark-mode body{background:var(--navy);color:var(--text-on-navy)}
+html.dark-mode .strand-card,html.dark-mode .research-card,html.dark-mode .admin-paper-card,html.dark-mode .resource-card,html.dark-mode .gate-card,html.dark-mode .section{background:#232a3d;border-color:rgba(255,255,255,0.1)}
+html.dark-mode select,html.dark-mode input[type=text],html.dark-mode input[type=password],html.dark-mode input[type=number],html.dark-mode textarea{background:#232a3d;color:var(--text-on-navy);border-color:rgba(255,255,255,0.15)}
+html.dark-mode .edit-modal,html.dark-mode .pdf-modal,html.dark-mode .gate-card{background:#232a3d}
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);min-height:100vh}
 nav{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;border-bottom:2px solid var(--gold);position:sticky;top:0;z-index:100}
 .nav-brand{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--text-on-navy);display:flex;align-items:center;gap:10px}
@@ -181,6 +191,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
     <button class="nav-btn" onclick="showPage('strands',this)">Strands</button>
     <button class="nav-btn" onclick="showPage('browse',this)">Browse</button>
     <button class="nav-btn" onclick="showPage('resources',this)">Resources</button>
+    <button style="background:none;border:none;color:var(--text-muted-navy);cursor:pointer;font-size:18px;padding:6px 12px;border-radius:6px;transition:all 0.15s" onclick="toggleDarkMode()" title="Toggle dark mode"><i class="ti ti-moon-stars"></i></button>
     <button class="admin-nav-btn" onclick="showAdminPage()" id="adminNavBtn"><i class="ti ti-lock" style="font-size:13px"></i> Admin</button>
   </div>
 </nav>
@@ -264,17 +275,17 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
     </div>
     <div class="search-wrap">
       <i class="ti ti-search search-icon"></i>
-      <input type="text" class="search-input" id="globalSearch" placeholder="Search by title, keyword, author, or strand..." oninput="handleGlobalSearch(this.value)">
+      <input type="text" class="search-input" id="globalSearch" placeholder="Search by title, keyword, author, or strand..." onkeydown="if(event.key==='Enter')handleGlobalSearch(this.value)">
     </div>
     <div class="wcag-badge"><i class="ti ti-shield-check" style="color:var(--gold);font-size:13px"></i> WCAG 2.2 Compliant</div>
   </div>
   <div class="section">
     <div class="section-header"><div class="section-title">Academic Strands</div></div>
     <div class="strand-grid">
-      <div class="strand-card stem" onclick="showStrandPage('STEM')" role="button" tabindex="0"><div class="strand-icon">&#128300;</div><div class="strand-name">STEM</div><div class="strand-full">Science, Technology, Engineering &amp; Mathematics</div><div class="strand-count" id="cnt-STEM">- papers</div></div>
-      <div class="strand-card humss" onclick="showStrandPage('HUMSS')" role="button" tabindex="0"><div class="strand-icon">&#128214;</div><div class="strand-name">HUMSS</div><div class="strand-full">Humanities &amp; Social Sciences</div><div class="strand-count" id="cnt-HUMSS">- papers</div></div>
-      <div class="strand-card abm" onclick="showStrandPage('ABM')" role="button" tabindex="0"><div class="strand-icon">&#128202;</div><div class="strand-name">ABM</div><div class="strand-full">Accountancy, Business &amp; Management</div><div class="strand-count" id="cnt-ABM">- papers</div></div>
-      <div class="strand-card gas" onclick="showStrandPage('GAS')" role="button" tabindex="0"><div class="strand-icon">&#127760;</div><div class="strand-name">GAS</div><div class="strand-full">General Academic Strand</div><div class="strand-count" id="cnt-GAS">- papers</div></div>
+      <div class="strand-card stem" onclick="showStrandPage('STEM')" role="button" tabindex="0"><div class="strand-icon"><i class="ti ti-atom-2" style="color:#0f2044;font-size:28px;font-weight:900"></i></div><div class="strand-name">STEM</div><div class="strand-full">Science, Technology, Engineering &amp; Mathematics</div><div class="strand-count" id="cnt-STEM">- papers</div></div>
+      <div class="strand-card humss" onclick="showStrandPage('HUMSS')" role="button" tabindex="0"><div class="strand-icon"><i class="ti ti-book" style="color:#0f2044;font-size:28px;font-weight:900"></i></div><div class="strand-name">HUMSS</div><div class="strand-full">Humanities &amp; Social Sciences</div><div class="strand-count" id="cnt-HUMSS">- papers</div></div>
+      <div class="strand-card abm" onclick="showStrandPage('ABM')" role="button" tabindex="0"><div class="strand-icon"><i class="ti ti-chart-bar" style="color:#0f2044;font-size:28px;font-weight:900"></i></div><div class="strand-name">ABM</div><div class="strand-full">Accountancy, Business &amp; Management</div><div class="strand-count" id="cnt-ABM">- papers</div></div>
+      <div class="strand-card gas" onclick="showStrandPage('GAS')" role="button" tabindex="0"><div class="strand-icon"><i class="ti ti-world" style="color:#0f2044;font-size:28px;font-weight:900"></i></div><div class="strand-name">GAS</div><div class="strand-full">General Academic Strand</div><div class="strand-count" id="cnt-GAS">- papers</div></div>
     </div>
   </div>
   <div class="section" style="background:var(--white);border-top:0.5px solid var(--card-border)">
@@ -292,10 +303,10 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
     <div class="section-header"><div class="section-title">Strand Directory</div></div>
     <p style="font-size:13px;color:#6b7a99;margin-bottom:1.5rem">Select an academic strand to explore its research archive.</p>
     <div class="strand-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
-      <div class="strand-card stem" onclick="showStrandPage('STEM')" role="button" tabindex="0" style="padding:1.5rem 1.25rem;text-align:left"><div style="font-size:32px;margin-bottom:12px">&#128300;</div><div class="strand-name" style="font-size:17px">STEM</div><div class="strand-full" style="margin-bottom:10px">Science, Technology, Engineering &amp; Mathematics</div><div class="strand-count" id="cnt2-STEM">- papers</div></div>
-      <div class="strand-card humss" onclick="showStrandPage('HUMSS')" role="button" tabindex="0" style="padding:1.5rem 1.25rem;text-align:left"><div style="font-size:32px;margin-bottom:12px">&#128214;</div><div class="strand-name" style="font-size:17px">HUMSS</div><div class="strand-full" style="margin-bottom:10px">Humanities &amp; Social Sciences</div><div class="strand-count" id="cnt2-HUMSS">- papers</div></div>
-      <div class="strand-card abm" onclick="showStrandPage('ABM')" role="button" tabindex="0" style="padding:1.5rem 1.25rem;text-align:left"><div style="font-size:32px;margin-bottom:12px">&#128202;</div><div class="strand-name" style="font-size:17px">ABM</div><div class="strand-full" style="margin-bottom:10px">Accountancy, Business &amp; Management</div><div class="strand-count" id="cnt2-ABM">- papers</div></div>
-      <div class="strand-card gas" onclick="showStrandPage('GAS')" role="button" tabindex="0" style="padding:1.5rem 1.25rem;text-align:left"><div style="font-size:32px;margin-bottom:12px">&#127760;</div><div class="strand-name" style="font-size:17px">GAS</div><div class="strand-full" style="margin-bottom:10px">General Academic Strand</div><div class="strand-count" id="cnt2-GAS">- papers</div></div>
+      <div class="strand-card stem" onclick="showStrandPage('STEM')" role="button" tabindex="0" style="padding:1.5rem 1.25rem;text-align:left"><div style="font-size:32px;margin-bottom:12px"><i class="ti ti-atom-2" style="color:#0f2044"></i></div><div class="strand-name" style="font-size:17px">STEM</div><div class="strand-full" style="margin-bottom:10px">Science, Technology, Engineering &amp; Mathematics</div><div class="strand-count" id="cnt2-STEM">- papers</div></div>
+      <div class="strand-card humss" onclick="showStrandPage('HUMSS')" role="button" tabindex="0" style="padding:1.5rem 1.25rem;text-align:left"><div style="font-size:32px;margin-bottom:12px"><i class="ti ti-book" style="color:#0f2044"></i></div><div class="strand-name" style="font-size:17px">HUMSS</div><div class="strand-full" style="margin-bottom:10px">Humanities &amp; Social Sciences</div><div class="strand-count" id="cnt2-HUMSS">- papers</div></div>
+      <div class="strand-card abm" onclick="showStrandPage('ABM')" role="button" tabindex="0" style="padding:1.5rem 1.25rem;text-align:left"><div style="font-size:32px;margin-bottom:12px"><i class="ti ti-chart-bar" style="color:#0f2044"></i></div><div class="strand-name" style="font-size:17px">ABM</div><div class="strand-full" style="margin-bottom:10px">Accountancy, Business &amp; Management</div><div class="strand-count" id="cnt2-ABM">- papers</div></div>
+      <div class="strand-card gas" onclick="showStrandPage('GAS')" role="button" tabindex="0" style="padding:1.5rem 1.25rem;text-align:left"><div style="font-size:32px;margin-bottom:12px"><i class="ti ti-world" style="color:#0f2044"></i></div><div class="strand-name" style="font-size:17px">GAS</div><div class="strand-full" style="margin-bottom:10px">General Academic Strand</div><div class="strand-count" id="cnt2-GAS">- papers</div></div>
     </div>
   </div>
 </div>
@@ -360,6 +371,51 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
       <div class="resource-card"><div class="resource-type">Methodology</div><div class="resource-name">Scribbr Methodology Hub</div><div class="resource-desc">Plain-language explanations of research design, sampling, validity, and data collection methods.</div><a class="resource-link" href="https://www.scribbr.com/category/methodology/" target="_blank"><i class="ti ti-external-link" style="font-size:13px"></i> Read guides</a></div>
       <div class="resource-card"><div class="resource-type">Methodology</div><div class="resource-name">Statistics How To</div><div class="resource-desc">Step-by-step guides for common statistical tests &mdash; Likert scale, chi-square, mean, and more.</div><a class="resource-link" href="https://www.statisticshowto.com/" target="_blank"><i class="ti ti-external-link" style="font-size:13px"></i> Browse tests</a></div>
       <div class="resource-card"><div class="resource-type">Methodology</div><div class="resource-name">Qualitative Research Guide (USC)</div><div class="resource-desc">University of Southern California's guide to interviews, focus groups, thematic analysis, and case studies.</div><a class="resource-link" href="https://libguides.usc.edu/writingguide/qualitative" target="_blank"><i class="ti ti-external-link" style="font-size:13px"></i> Read guide</a></div>
+    </div>
+  </div>
+  <hr class="divider">
+  <div class="section" style="background:var(--cream);border-top:0.5px solid var(--card-border)">
+    <div class="section-header"><div class="section-title">Credits &amp; Acknowledgments</div></div>
+    <div style="background:var(--white);border:0.5px solid var(--card-border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem">
+      <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:var(--navy);margin-bottom:1rem">Research Advisor / Work Immersion Advisor</div>
+      <div style="font-size:14px;color:#6b7a99;margin-bottom:1rem"><strong>Mr. Jeffery L. Maraviles</strong></div>
+      <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:var(--navy);margin-bottom:0.5rem">Project Team</div>
+      <div style="font-size:14px;color:#6b7a99">
+        <div>Iago Anavrin</div>
+        <div>Noah C. Maines</div>
+        <div>Elias Avad</div>
+        <div>Nathan Joshua R. Batallones</div>
+      </div>
+    </div>
+    <div class="section-header"><div class="section-title">Known Issues &amp; Bugs</div></div>
+    <div style="background:var(--white);border:0.5px solid var(--card-border);border-radius:var(--radius);padding:1.5rem">
+      <div style="margin-bottom:1.5rem">
+        <div style="display:flex;gap:0.75rem;margin-bottom:0.75rem">
+          <div style="color:var(--danger);font-weight:600;flex-shrink:0">1.</div>
+          <div style="font-size:14px;color:#6b7a99">
+            <strong style="color:var(--navy)">Home page search bar behavior</strong>
+            <div style="margin-top:0.5rem">The search bar navigates instantly to the Browse page on input. Use the search functionality or filters on the Browse page for refined results.</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-bottom:1.5rem">
+        <div style="display:flex;gap:0.75rem;margin-bottom:0.75rem">
+          <div style="color:var(--danger);font-weight:600;flex-shrink:0">2.</div>
+          <div style="font-size:14px;color:#6b7a99">
+            <strong style="color:var(--navy)">CHED E-Library link unavailable</strong>
+            <div style="margin-top:0.5rem">DNS address could not be found. The link may be temporarily unavailable or the resource has been relocated.</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;gap:0.75rem;margin-bottom:0.75rem">
+          <div style="color:var(--danger);font-weight:600;flex-shrink:0">3.</div>
+          <div style="font-size:14px;color:#6b7a99">
+            <strong style="color:var(--navy)">Dark mode beta</strong>
+            <div style="margin-top:0.5rem">Dark mode is now available (click the moon icon in the navigation). Some resources or external embeds may not display optimally in dark mode.</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -562,8 +618,10 @@ function resetUploadForm(){
 async function deletePaper(id,fileName){if(!confirm('Delete this paper permanently? This cannot be undone.'))return;await sb.storage.from(BUCKET).remove([fileName]);const{error}=await sb.from('papers').delete().eq('id',id);if(error){showToast('Delete failed: '+error.message,'error');return;}showToast('Paper deleted.','success');loadAllPapers();}
 function showToast(msg,type='success'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+type;setTimeout(()=>t.classList.remove('show'),3500);}
 function escHtml(str){if(!str)return'';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function toggleDarkMode(){document.documentElement.classList.toggle('dark-mode');localStorage.setItem('darkMode',document.documentElement.classList.contains('dark-mode'));}
+function initDarkMode(){if(localStorage.getItem('darkMode')==='true'){document.documentElement.classList.add('dark-mode');}}
 document.addEventListener('click',(e)=>{if(!document.getElementById('themeDropdownWrap').contains(e.target)){document.getElementById('themeDropdown').style.display='none';document.getElementById('themeChevron').style.transform='translateY(-50%)';}const editWrap=document.getElementById('editThemeDropdownWrap');if(editWrap&&!editWrap.contains(e.target))document.getElementById('editThemeDropdown').style.display='none';});
-document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('#themeOptionsList .theme-option').forEach(opt=>{opt.addEventListener('click',()=>selectTheme(opt.getAttribute('data-value')));});document.querySelectorAll('#editThemeOptionsList .et').forEach(opt=>{opt.addEventListener('click',()=>selectEditTheme(opt.getAttribute('data-value')));});});
+document.addEventListener('DOMContentLoaded',()=>{initDarkMode();document.querySelectorAll('#themeOptionsList .theme-option').forEach(opt=>{opt.addEventListener('click',()=>selectTheme(opt.getAttribute('data-value')));});document.querySelectorAll('#editThemeOptionsList .et').forEach(opt=>{opt.addEventListener('click',()=>selectEditTheme(opt.getAttribute('data-value')));});});
 loadPapers();
 </script>
 </body>

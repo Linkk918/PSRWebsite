@@ -32,9 +32,9 @@ html.dark-mode .card-authors,html.dark-mode .resource-desc,html.dark-mode .admin
 html.dark-mode h1,html.dark-mode h2,html.dark-mode h3,html.dark-mode h4,html.dark-mode h5,html.dark-mode .strand-name,html.dark-mode strong{color:#e0dfd8}
 html.dark-mode .divider{border-top-color:rgba(255,255,255,0.1)}
 html.dark-mode .no-results,html.dark-mode .loading{color:#8b94b8}
-html.dark-mode [style*="background:var(--white)"],html.dark-mode [style*="background:var(--cream)"]{background:#232a3d !important;border-color:rgba(255,255,255,0.1) !important}
-html.dark-mode [style*="color:var(--navy)"]{color:#e0dfd8 !important}
-html.dark-mode [style*="color:#6b7a99"]{color:#a8b4c8 !important}
+html.dark-mode [style*="color:#0f2044"]{color:#a8b4c8 !important}
+html.dark-mode .ti,html.dark-mode i[class*="ti-"]{color:inherit}
+html.dark-mode .strand-icon i,html.dark-mode .file-drop-icon i{color:#a8b4c8}
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);min-height:100vh}
 nav{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;border-bottom:2px solid var(--gold);position:sticky;top:0;z-index:100}
 .nav-brand{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--text-on-navy);display:flex;align-items:center;gap:10px}
@@ -61,7 +61,8 @@ nav{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justif
 .wcag-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.08);border:0.5px solid rgba(255,255,255,0.15);border-radius:20px;padding:4px 10px;font-size:11px;color:var(--text-muted-navy);margin-top:1rem}
 .search-wrap{position:relative;max-width:580px;margin:0 auto}
 .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--navy-light);font-size:18px;pointer-events:none}
-.search-input{width:100%;padding:13px 14px 13px 48px;border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:15px;background:var(--white);color:var(--navy);outline:none;box-shadow:0 2px 20px rgba(0,0,0,0.25)}
+html.dark-mode .search-icon{color:#a8b4c8}
+.search-input{width:100%;padding:13px 14px 13px 52px;border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:15px;background:var(--white);color:var(--navy);outline:none;box-shadow:0 2px 20px rgba(0,0,0,0.25)}
 html.dark-mode .search-input{background:#232a3d;color:var(--text-on-navy);box-shadow:0 2px 20px rgba(0,0,0,0.6)}
 .search-input::placeholder{color:#9ea8bb}
 .search-input:focus{box-shadow:0 0 0 3px rgba(200,150,62,0.4)}
@@ -393,36 +394,6 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
         <div>Noah C. Maines</div>
         <div>Elias Avad</div>
         <div>Nathan Joshua R. Batallones</div>
-      </div>
-    </div>
-    <div class="section-header"><div class="section-title">Known Issues &amp; Bugs</div></div>
-    <div style="background:var(--white);border:0.5px solid var(--card-border);border-radius:var(--radius);padding:1.5rem">
-      <div style="margin-bottom:1.5rem">
-        <div style="display:flex;gap:0.75rem;margin-bottom:0.75rem">
-          <div style="color:var(--danger);font-weight:600;flex-shrink:0">1.</div>
-          <div style="font-size:14px;color:#6b7a99">
-            <strong style="color:var(--navy)">Home page search bar behavior</strong>
-            <div style="margin-top:0.5rem">The search bar navigates instantly to the Browse page on input. Use the search functionality or filters on the Browse page for refined results.</div>
-          </div>
-        </div>
-      </div>
-      <div style="margin-bottom:1.5rem">
-        <div style="display:flex;gap:0.75rem;margin-bottom:0.75rem">
-          <div style="color:var(--danger);font-weight:600;flex-shrink:0">2.</div>
-          <div style="font-size:14px;color:#6b7a99">
-            <strong style="color:var(--navy)">CHED E-Library link unavailable</strong>
-            <div style="margin-top:0.5rem">DNS address could not be found. The link may be temporarily unavailable or the resource has been relocated.</div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div style="display:flex;gap:0.75rem;margin-bottom:0.75rem">
-          <div style="color:var(--danger);font-weight:600;flex-shrink:0">3.</div>
-          <div style="font-size:14px;color:#6b7a99">
-            <strong style="color:var(--navy)">Dark mode beta</strong>
-            <div style="margin-top:0.5rem">Dark mode is now available (click the moon icon in the navigation). Some resources or external embeds may not display optimally in dark mode.</div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
